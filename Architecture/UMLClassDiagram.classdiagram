@@ -1,0 +1,307 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<logicalClassDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="f177712a-90a9-4ae7-bf31-5ee137453fc9" name="UMLClassDiagram" linkedPackageId="0628d905-4f7d-4a53-abf7-a867a22d4c0e" xmlns="http://schemas.microsoft.com/dsltools/LogicalClassDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="0ad9c3d7-9945-4b8c-bfa3-a46ae63528f3">
+      <profileInstance Id="af85f9cb-f879-45b1-b99b-5175b8eda8fd" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="75d34db3-cd86-4f28-a4e4-80414dbea2ff">
+      <profileInstance Id="4537cd78-85da-4e5c-94d5-ab1b36893345" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="0358ec5c-25c2-4286-bd32-8f916cb2ae02" name="RequestHandler" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="02e9e81c-c838-4713-862e-76b6e3c30fa2" />
+        <targetEnds>
+          <association Id="a57d2e93-cea2-45a0-a48a-efdd470af0d9" isDerived="false" sourceEndRoleName="RequestHandler" targetEndRoleName="ResponseHandler" isLeaf="false" isAbstract="false">
+            <classMoniker Id="5607616b-0c48-4a8f-88ab-ef75a9ec724e" LastKnownName="ResponseHandler" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="942b38af-bede-4762-a1b9-3061849aad76" name="RequestHandler" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="2ec8262a-bdd6-44a3-b95f-28a37aba22a5" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="ce267462-8040-4c6e-a06d-1e3d9c19a2db" name="ResponseHandler" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="36e1d42f-ac96-43d1-aeab-160db9f9a1be" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="93ea0a99-7fe9-4d0a-85c6-f4dfd8aa3869" />
+          </association>
+        </targetEnds>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="929d9bf8-1f0d-4b4b-8c6b-a37487d4f924" name="Server" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="a73fb3f1-6af2-4aa2-9d04-063ece1eec75" />
+        <targetEnds>
+          <association Id="437a5e8d-b9d4-4422-a77c-04ae43e0c05f" isDerived="false" sourceEndRoleName="Server" targetEndRoleName="RequestHandler" isLeaf="false" isAbstract="false">
+            <classMoniker Id="0358ec5c-25c2-4286-bd32-8f916cb2ae02" LastKnownName="RequestHandler" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="7d2e3c21-bb17-4df7-9fcc-745ab321f4a9" name="Server" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="0583f799-9bfd-421d-8926-f459d275237b" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="770f40cd-ca44-4765-892f-ed2a96739193" name="RequestHandler" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="07af478c-a031-4e4d-ae12-f39575d91e8e" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="0b90d83b-d8b7-4549-b964-5c0d41f03a0f" />
+          </association>
+        </targetEnds>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="7876e578-df87-4b5f-8852-c7117f4c3e78" name="ControlServer" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="5671437d-6605-489f-85b7-36431beaedd2" />
+        <targetEnds>
+          <association Id="eec6e704-fb15-42ac-8354-8cf1acdadb87" isDerived="false" sourceEndRoleName="ControlServer" targetEndRoleName="iReader" isLeaf="false" isAbstract="false">
+            <interfaceMoniker Id="6de6c60f-6a08-474f-9c3c-d85c74f62778" LastKnownName="IReader" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="9093a7bf-ce99-4d62-b82c-9aa396d4d88f" name="ControlServer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="1e9cb1cf-0fe9-40a5-ad16-6225ed18fa94" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="ce7ad898-430d-469c-a0c5-dc73271030fe" name="iReader" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="55034518-a16c-4cf4-894e-2aa5eb64fd0b" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="933cd871-9ecb-46a8-a830-8f6194b7211d" />
+          </association>
+          <association Id="fccc7427-55d5-472d-9396-975707ee86ba" isDerived="false" sourceEndRoleName="ControlServer" targetEndRoleName="iWriter" isLeaf="false" isAbstract="false">
+            <interfaceMoniker Id="5d221f38-fac8-4551-b522-1fe2f279a171" LastKnownName="IWriter" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="0868fb8e-5e71-43a0-9c74-550e6322062f" name="ControlServer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="2fb8e9d8-0b0d-410a-91ff-e9a78bdf2fc7" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="f2b16618-f082-4f19-ae8e-89d0ff00e75a" name="iWriter" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="51d66d8b-47f2-47b9-99c7-079373e6619c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="fd38482e-007b-4112-be45-00013c24fca1" />
+          </association>
+          <association Id="aad7c04f-7845-4e87-a3d6-dbc2d3a9ea4e" isDerived="false" sourceEndRoleName="ControlServer" targetEndRoleName="iDatabaseConnection" isLeaf="false" isAbstract="false">
+            <interfaceMoniker Id="126bda9a-c59a-4f19-a086-55af0b7108a0" LastKnownName="IDatabaseConnection" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="833604d4-df65-4d8a-97aa-faea17e7b569" name="ControlServer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="58dc00af-c534-4ede-86be-e60373ca1d77" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="79c2fb59-0fef-461e-9980-5b18b67c1e60" name="iDatabaseConnection" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="840e1182-d597-4807-80d5-97eed6f84278" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="c3a2c088-c74c-46d5-92fe-eb03c67dbb15" />
+          </association>
+        </targetEnds>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="3eb3f4f2-1e03-4d8a-a5e3-6ba2da1f3ca4" name="Logger" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="3bba33d0-7da6-4e1f-8b9a-b9c3124d332e" />
+        <ownedOperationsInternal>
+          <operation Id="e3bea6cc-cc47-4f2c-aa4c-f8691810523d" name="write" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="df7f76fd-22f3-4295-809f-c174deb2095d" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="b69abd3d-dbbf-47b5-bce3-69acb1400374" name="String message" direction="In" isUnique="false">
+                  <elementDefinition Id="a4514102-4e6c-4181-8734-0c15de5a515b" />
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="5224a5cf-c8db-4107-b7ff-d3a66f2235df" name="String ipAddress" direction="In" isUnique="false">
+                  <elementDefinition Id="105ca3d1-8686-4580-8632-7fb1825828d7" />
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation Id="e1dd2e31-55da-46d1-b7eb-8fea0df13cbf" name="read" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="2c2fc971-8027-43f7-abac-5af7b7319740" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="428ca3ac-3232-41fa-8dbe-39380a0cf7ed" direction="Return" isUnique="false">
+                  <elementDefinition Id="53b972ca-f155-438a-8cd3-02420ec05923" />
+                  <type_NamedElement>
+                    <referencedTypeMoniker Id="8ffb3e5d-1a42-4dbc-8607-5b4b259988b1" LastKnownName="String" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="68ae7ed5-4191-4f65-ac9b-d05749aeefcf" name="XMLWriter" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="3e794a0d-22be-495d-849f-73970a6bddbd" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="689b3c84-289f-4d34-b181-bf27ef959650" name="XMLReader" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="34346688-fc57-4a9c-b562-958bded9b086" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="9955b126-30ee-40d9-a995-2ce9197a6a69" name="Program" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="cf648c11-fbb8-4c56-adaf-903e6af20711" />
+        <targetEnds>
+          <association Id="f7c9ffe1-5cf8-4ae6-9775-a7fe329fbd43" isDerived="false" sourceEndRoleName="Program" targetEndRoleName="ControlServer" isLeaf="false" isAbstract="false">
+            <classMoniker Id="7876e578-df87-4b5f-8852-c7117f4c3e78" LastKnownName="ControlServer" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="d1498564-af7a-4389-8914-929bd36f1772" name="Program" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="d590658c-50cc-4413-b378-9c30a5ba86fa" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="d1b603d5-0908-47aa-9627-bd1aef29cccd" name="ControlServer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="db71400e-9500-423a-8fb6-50a700cb906b" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="1570d158-4724-4ff7-bbf7-9cc4fe257b7f" />
+          </association>
+          <association Id="b3df309b-ba60-419b-b180-1b5937bac200" isDerived="false" sourceEndRoleName="Program" targetEndRoleName="Logger" isLeaf="false" isAbstract="false">
+            <classMoniker Id="3eb3f4f2-1e03-4d8a-a5e3-6ba2da1f3ca4" LastKnownName="Logger" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="8834536a-ea2a-4998-a950-06c49808f2eb" name="Program" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="7f56057f-24f9-4d7e-8c54-34528aa00753" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="dd42520b-f78d-441f-8426-b9d1f9e99f31" name="Logger" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="c925f523-0c7e-4ddf-8e8e-2b6fb2c1afa3" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="8252296d-c693-46a5-a931-124275da773e" />
+          </association>
+          <association Id="f2060615-c1ba-492f-8556-b6542da35beb" isDerived="false" sourceEndRoleName="Program" targetEndRoleName="Server" isLeaf="false" isAbstract="false">
+            <classMoniker Id="929d9bf8-1f0d-4b4b-8c6b-a37487d4f924" LastKnownName="Server" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="8bbda709-00b6-41d4-9a78-84c766de3440" name="Program" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="57b9521b-fe60-452a-bfc4-7c40f9baff31" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="298cadc5-0e77-41ed-a5d9-6e78a5e36652" name="Server" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="3af433c1-0a41-4734-8684-c56596a007e1" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="509241cb-59fa-477a-96c6-4bf53e6c1b8f" />
+          </association>
+        </targetEnds>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <packageHasNamedElement>
+      <referencedType Id="8ffb3e5d-1a42-4dbc-8607-5b4b259988b1" name="String" isAbstract="false" isLeaf="false" cachedFullName="String">
+        <elementDefinition Id="59259974-6d55-42c6-b7bd-763d77ac8ef9" />
+      </referencedType>
+    </packageHasNamedElement>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="5607616b-0c48-4a8f-88ab-ef75a9ec724e" name="ResponseHandler" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="08640689-3c4b-454d-ae4e-2398ef0d4737" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="01222204-3549-4f11-914e-c0ff987e8a3c" name="MySQLDatabaseConnector" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="aba67769-b0b5-48e2-8289-ca43ee3f00e6" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <Interface Id="5d221f38-fac8-4551-b522-1fe2f279a171" name="IWriter" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="c65d0194-73c7-489c-b534-0e0a7deada19" />
+        <targetEnds>
+          <association Id="80fefd98-d83f-4728-a1d6-e8986bb70c16" isDerived="false" sourceEndRoleName="iWriter" targetEndRoleName="XMLWriter" isLeaf="false" isAbstract="false">
+            <classMoniker Id="68ae7ed5-4191-4f65-ac9b-d05749aeefcf" LastKnownName="XMLWriter" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="3c28d560-40ef-4873-b8cb-82934fbb2b6d" name="iWriter" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="d11825c3-a598-456d-be5d-1c081b6a7474" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="3eca25c5-2131-48b8-b39d-10c5b8162381" name="XMLWriter" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="f7e3c9f7-6374-47c1-8094-95b4bd51a6c2" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="bdf04853-3faa-4b0f-80be-246f0a2057e6" />
+          </association>
+        </targetEnds>
+      </Interface>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <Interface Id="6de6c60f-6a08-474f-9c3c-d85c74f62778" name="IReader" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="43569268-7e16-4119-8ec6-218c1acb7bdf" />
+        <targetEnds>
+          <association Id="3c718c53-d1a4-4892-b328-0ee9d97459cf" isDerived="false" sourceEndRoleName="iReader" targetEndRoleName="XMLReader" isLeaf="false" isAbstract="false">
+            <classMoniker Id="689b3c84-289f-4d34-b181-bf27ef959650" LastKnownName="XMLReader" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="3621afa1-9ed8-4c00-bc87-caa256193af6" name="iReader" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="d136085d-8f36-4d9e-954d-305298edc18e" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a99164c2-e479-4379-bb62-f4dbaad61e58" name="XMLReader" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="de641f40-d54a-4946-82a0-6812acd371f0" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="8e22b571-5a12-4914-8201-c4ed2c9bfa1d" />
+          </association>
+        </targetEnds>
+      </Interface>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <Interface Id="126bda9a-c59a-4f19-a086-55af0b7108a0" name="IDatabaseConnection" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="a8a07e19-49b8-411e-a37c-b4debd0ca9b5" />
+        <targetEnds>
+          <association Id="87214871-44b6-46f0-9af3-2b3cf9d8194a" isDerived="false" sourceEndRoleName="iDatabaseConnection" targetEndRoleName="DatabaseConnector" isLeaf="false" isAbstract="false">
+            <classMoniker Id="01222204-3549-4f11-914e-c0ff987e8a3c" LastKnownName="MySQLDatabaseConnector" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="610e5ba6-a7d6-46a1-83f5-c631c6bc9c65" name="iDatabaseConnection" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="cedcbf51-04ac-4939-8cd9-ded2a9d2ff0f" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="0675a0ab-2bb7-4251-b55f-895c33104ab3" name="DatabaseConnector" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="0403758f-b30e-4f59-90ea-0adf6f062585" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="bfebcb5c-9e26-420f-bce4-ddee0f929d8b" />
+          </association>
+        </targetEnds>
+      </Interface>
+    </logicalClassDesignerModelHasTypes>
+  </packagedElements>
+  <package Id="0628d905-4f7d-4a53-abf7-a867a22d4c0e" name="Architecture">
+    <elementDefinition Id="3c6b2d87-356e-4190-8f76-7a0a18b3534a" />
+  </package>
+</logicalClassDesignerModel>
