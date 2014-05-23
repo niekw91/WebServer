@@ -8,5 +8,7 @@ namespace WebServer.Utilities.Interfaces
 {
     interface IWriter
     {
+        void WriteFile(String path, String content);
+        void WriteLine(String path, String line);
     }
 }

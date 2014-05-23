@@ -8,5 +8,19 @@ namespace WebServer.Server
 {
     class Server
     {
+        public void Start()
+        {
+
+        }
+
+        public void Stop()
+        {
+
+        }
+
+        public void Restart()
+        {
+
+        }
     }
 }

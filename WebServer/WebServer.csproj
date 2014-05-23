@@ -48,6 +48,7 @@
     <Compile Include="Server\RequestHandler.cs" />
     <Compile Include="Server\ResponseHandler.cs" />
     <Compile Include="Server\Server.cs" />
+    <Compile Include="Server\ServerConfig.cs" />
     <Compile Include="Utilities\Database\MySQLDatabaseConnection.cs" />
     <Compile Include="Utilities\Interfaces\IDatabaseConnection.cs" />
     <Compile Include="Utilities\Interfaces\IReader.cs" />

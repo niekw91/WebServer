@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
   dslVersion="1.0.0.0"
   Id="3c6b2d87-356e-4190-8f76-7a0a18b3534a"
   name="Architecture" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
@@ -115,6 +115,45 @@
               </associationHasOwnedEnds>
             </relationshipOwnedElementsInternal>
           </association>
+          <association
+            Id="a0abbc13-944b-4345-83ea-cd4c66ec3383"
+            isDerived="false"
+            sourceEndRoleName="Server"
+            targetEndRoleName="ServerConfig"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="40e02cea-8165-4a84-b3ae-57a4d0cb3479"
+              LastKnownName="ServerConfig"
+              LastKnownLocation="Architecture.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="bcebe9a6-7060-4667-a329-227ae27a2524"
+                  name="Server"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="c5b92bb9-9db4-4118-8f7b-5f829194917f"
+                  name="ServerConfig"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
         </targetEnds>
       </class>
     </packageHasNamedElement>
@@ -155,45 +194,6 @@
                 <memberEnd
                   Id="55034518-a16c-4cf4-894e-2aa5eb64fd0b"
                   name="iReader"
-                  isLeaf="false"
-                  isStatic="false"
-                  isReadOnly="false"
-                  isDerived="false"
-                  isDerivedUnion="false"
-                  aggregation="None"
-                  isComposite="false" />
-              </associationHasOwnedEnds>
-            </relationshipOwnedElementsInternal>
-          </association>
-          <association
-            Id="fd38482e-007b-4112-be45-00013c24fca1"
-            isDerived="false"
-            sourceEndRoleName="ControlServer"
-            targetEndRoleName="iWriter"
-            isLeaf="false"
-            isAbstract="false">
-            <interfaceMoniker
-              Id="c65d0194-73c7-489c-b534-0e0a7deada19"
-              LastKnownName="IWriter"
-              LastKnownLocation="Architecture.uml" />
-            <relationshipOwnedElementsInternal>
-              <associationHasOwnedEnds>
-                <memberEnd
-                  Id="2fb8e9d8-0b0d-410a-91ff-e9a78bdf2fc7"
-                  name="ControlServer"
-                  isLeaf="false"
-                  isStatic="false"
-                  isReadOnly="false"
-                  isDerived="false"
-                  isDerivedUnion="false"
-                  aggregation="None"
-                  isComposite="false"
-                  isNavigableOwned="false" />
-              </associationHasOwnedEnds>
-              <associationHasOwnedEnds>
-                <memberEnd
-                  Id="51d66d8b-47f2-47b9-99c7-079373e6619c"
-                  name="iWriter"
                   isLeaf="false"
                   isStatic="false"
                   isReadOnly="false"
@@ -561,6 +561,45 @@
               </associationHasOwnedEnds>
             </relationshipOwnedElementsInternal>
           </association>
+          <association
+            Id="51cac1ca-5a91-48c6-a8d4-3d5213644920"
+            isDerived="false"
+            sourceEndRoleName="IReader"
+            targetEndRoleName="TextReader"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="582d2adc-c5d6-4301-a0ee-02d12306019a"
+              LastKnownName="TextReader"
+              LastKnownLocation="Architecture.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="a502800f-d688-4702-98e1-dd9a1ad522fe"
+                  name="IReader"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="aafda694-295f-447c-b4ad-81b173b82a6a"
+                  name="TextReader"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
         </targetEnds>
       </Interface>
     </packageHasNamedElement>
@@ -612,6 +651,103 @@
           </association>
         </targetEnds>
       </Interface>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="582d2adc-c5d6-4301-a0ee-02d12306019a"
+        name="TextReader"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="40e02cea-8165-4a84-b3ae-57a4d0cb3479"
+        name="ServerConfig"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <targetEnds>
+          <association
+            Id="ccd07b8d-61b0-450f-8a38-575478ca7fd0"
+            isDerived="false"
+            sourceEndRoleName="ServerConfig"
+            targetEndRoleName="IReader"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="43569268-7e16-4119-8ec6-218c1acb7bdf"
+              LastKnownName="IReader"
+              LastKnownLocation="Architecture.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="61dc5cf5-2cba-4b78-8afd-378522daa3bc"
+                  name="ServerConfig"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="9b16f6c2-e428-4065-b67a-7b24bf8e5219"
+                  name="IReader"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="2234e064-37e4-475e-9f84-ea16e16f1012"
+            isDerived="false"
+            sourceEndRoleName="ServerConfig"
+            targetEndRoleName="IWriter"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="c65d0194-73c7-489c-b534-0e0a7deada19"
+              LastKnownName="IWriter"
+              LastKnownLocation="Architecture.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="6b010582-eea0-42a4-93b1-f6607313b709"
+                  name="ServerConfig"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="ae779763-c555-4732-8956-ac7be56b1475"
+                  name="IWriter"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
     </packageHasNamedElement>
   </packagedElements>
   <primitiveType
