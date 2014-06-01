@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<server>
+		<port>8080</port>
+		<webroot>webroot\www</webroot>
+		<default-page>index.html;index.htm</default-page>
+		<dir-browsing>false</dir-browsing>
+	</server>
+	<controlserver>
+		<port>8081</port>
+	</controlserver>
+</config>

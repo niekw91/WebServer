@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>Control Server</title>
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+        <style>
+            .basedialog {
+                position:fixed;
+                top:33%;
+                right:33%;
+                width:30%;
+                z-index:10;
+                box-shadow: 2px 2px 10px;
+                background-color: white;
+                border-radius: 10px;
+            }
+            .login-dialog {
+                box-shadow: none;
+                background-color: transparent;
+                background-image:url('login_light.png');
+                background-repeat: no-repeat;
+                background-size:100% 100%;
+                padding:10px;
+                padding-bottom: 35px;
+                border-radius: 0;
+                width: 25%;
+                min-width: 400px;
+                left:35%
+            }
+            .dialogbackground {
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: 0;
+                bottom: 0;
+                background-color: rgba(0,0,0,0.4);
+                z-index: 20;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="dialogbackground">
+            <div class="login-dialog basedialog">
+                 <form class="form-horizontal">
+                     <fieldset>
+                         <legend>Login</legend>
+
+                         <div class="form-group">
+                             <label for="username" class="col-sm-3 control-label">Username</label>
+                             <div class="col-sm-9">
+                                  <input type="text" class="form-control" id="username" placeholder="Username" required autofocus/>
+                            </div>
+                         </div>
+                         <div class="form-group">
+                             <label for="password" class="col-sm-3 control-label">Password</label>
+                             <div class="col-sm-9">
+                                <input type="password" class="form-control" id="password" placeholder="Password" required/>
+                             </div>
+                         </div>
+                         <div class="btn-row pull-right">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                         </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

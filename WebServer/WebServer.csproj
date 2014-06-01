@@ -45,10 +45,13 @@
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\Request.cs" />
     <Compile Include="Server\RequestHandler.cs" />
+    <Compile Include="Server\Response.cs" />
     <Compile Include="Server\ResponseHandler.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\ServerConfig.cs" />
+    <Compile Include="Server\WebObject.cs" />
     <Compile Include="Utilities\Database\MySQLDatabaseConnection.cs" />
     <Compile Include="Utilities\Interfaces\IDatabaseConnection.cs" />
     <Compile Include="Utilities\Interfaces\IReader.cs" />
@@ -62,6 +65,8 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Config\serverconfig.xml" />
+    <Content Include="index.html" />
+    <Content Include="login_light.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

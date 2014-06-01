@@ -13,7 +13,13 @@ namespace WebServer
         {
             ServerConfig config = new ServerConfig();
             config.Init();
-            Console.WriteLine("Config file created");
+
+            Server.Server server = new Server.Server(config);
+            ControlServer.ControlServer cServer = new ControlServer.ControlServer();
+
+            server.Start();
+
+
             Console.Read();
         }
     }
