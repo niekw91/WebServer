@@ -45,8 +45,7 @@ namespace WebServer.Server
             foreach(KeyValuePair<string, string> header in _headers) {
                 headerStr += header.Key + ": " + header.Value + Environment.NewLine;
             }
-
-            return headerStr;
+            return headerStr + Environment.NewLine;
         }
 
         public string GetFullResponseHeadersAsString()
@@ -61,7 +60,7 @@ namespace WebServer.Server
 
         private string PathExtensionToContentType()
         {
-            Console.WriteLine(PathExtension);
+            //Console.WriteLine(PathExtension);
             switch (PathExtension)
             {
                 case "png": case "jpg": case "jpeg":

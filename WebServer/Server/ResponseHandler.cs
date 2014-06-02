@@ -33,16 +33,29 @@ namespace WebServer.Server
             return path;
         }
 
+        public void HandleBadRequest(TcpClient client)
+        {
+            Response response = new Response();
+            response.StatusCode = 400;
+            response.StatusMessage = "Bad Request";
+            response.AddHeader("Server", "Homemade 0.1");
+
+            ReturnResponse(client.GetStream(), response);
+        }
+
         public void HandleResponse(TcpClient client, Request request)
         {
             NetworkStream stream = client.GetStream();
             //@"C:\Users\Remi\Documents\GitHub\WebServer\WebServer\index.html"
             Response response = new Response(request);
-            response.StatusCode = 100;
-            response.StatusMessage = "Continue";
+            response.StatusCode = 200;
+            response.StatusMessage = "OK";
 
             response.Path = Server.GetConfig().Webroot + request.Url;
-            response.Content = (response.ContentType.Contains("image")) ? null  : File.ReadAllBytes(response.Path);
+            if (File.Exists(response.Path))
+            {
+                response.Content = File.ReadAllBytes(response.Path);
+            }
 
             if (response.Content != null)
             {
@@ -57,6 +70,7 @@ namespace WebServer.Server
             } else {
                 response.StatusCode = 404;
                 response.StatusMessage = "Not Found";
+                response.Content = GetErrorPage(response.StatusCode);
             }
             response.AddHeader("Server", "Homemade 0.1");
 
@@ -98,10 +112,25 @@ namespace WebServer.Server
             
             Console.WriteLine(response.GetHeadersAsString());
 
+            ReturnResponse(stream, response);
+        }
+
+        public void ReturnResponse(NetworkStream stream, Response response)
+        {
             byte[] _response = (response.Content != null) ? response.GetResponseHeaderAsByteArray().Concat(response.Content).ToArray() : response.GetResponseHeaderAsByteArray();
             stream.Write(_response, 0, _response.Length);
             stream.Flush();
             stream.Close();
+        }
+
+        public Byte[] GetErrorPage(int statusCode)
+        {
+            String path = @"webroot\www\errors\{0}.html";
+            if (File.Exists(String.Format(path, statusCode)))
+            {
+                return File.ReadAllBytes(String.Format(path, statusCode));
+            }
+            return null;
         }
 
         //public string AddHeader(string header, string value)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -10,7 +11,7 @@ namespace WebServer.Server
 {
     class RequestHandler
     {
-
+        public Stopwatch Timer { get; set; }
         public Request ParseStringToRequest(string requestHeaders)
         {
             string[] reqParts = requestHeaders.Split(Environment.NewLine.ToCharArray());
@@ -81,23 +82,76 @@ namespace WebServer.Server
             String data = Encoding.UTF8.GetString(bytes);
             Console.WriteLine(data);
             Request request = ParseStringToRequest(data);
-
+            // Create response handler
+            ResponseHandler rsHandler = new ResponseHandler();
             //new Regex("^GET").IsMatch(data)
-            if (request != null)
+            if (request != null && (request.Method == "POST" || request.Method == "GET"))
             {
+                // Set full url
+                request.FullUrl = request.Url;
+                // Parse request values
+                ParseRequestValues(request);
+
+                foreach (KeyValuePair<String, String> kvp in request.Values)
+                {
+                    Console.WriteLine(String.Format("key: {0} value {1}", kvp.Key, kvp.Value));
+                }
+
                 Console.WriteLine("Start handler");
-                ResponseHandler rsHandler = new ResponseHandler();
                 rsHandler.HandleResponse(client, request);
             }
             else
             {
                 Console.WriteLine("Invalid request");
+                rsHandler.HandleBadRequest(client);
             }
            
 
             client.Close();
+            Timer.Stop();
+            Console.WriteLine("Total time: " + Timer.ElapsedMilliseconds + " ms");
             Console.WriteLine("Close connection");
             Console.WriteLine("----------------");
+        }
+
+
+        private void ParseRequestValues(Request request)
+        {
+            switch (request.Method)
+            {
+                case "GET":
+                    ParseGetValues(request);
+                    break;
+                case "POST":
+                    ParsePostValues(request);
+                    break;
+            }
+
+        }
+
+        private void ParsePostValues(Request request)
+        {
+
+        }
+
+        private void ParseGetValues(Request request)
+        {
+            string[] urlParts = request.Url.Split('?');
+            request.Url = urlParts[0];
+            if (urlParts.Length > 1)
+            {
+                Dictionary<string, string> values = new Dictionary<string, string>();
+                string[] parameters = urlParts[1].Split('&');
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    string[] keyValues = parameters[i].Split('=');
+                    if (keyValues.Length == 2)
+                    {
+                        values.Add(keyValues[0].ToLower(), keyValues[1]);
+                    }
+                }
+                request.Values = values;
+            }
         }
     }
 }

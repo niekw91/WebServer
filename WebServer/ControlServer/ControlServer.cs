@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebServer.ControlServer
 {
-    class ControlServer
+    class ControlServer : Server.Server
     {
     }
 }
