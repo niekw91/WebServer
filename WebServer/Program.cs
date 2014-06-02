@@ -11,13 +11,13 @@ namespace WebServer
     {
         static void Main(string[] args)
         {
-            ServerConfig config = new ServerConfig();
-            config.Init();
+            ServerConfig.Init();
 
-            Server.Server server = new Server.Server(config);
+            Server.Server server = new Server.Server();
             ControlServer.ControlServer cServer = new ControlServer.ControlServer();
 
             server.Start();
+            cServer.Start();
 
 
             Console.Read();

@@ -12,19 +12,15 @@ namespace WebServer.Server
 {
     class Server
     {
-        private static ServerConfig config;
-
-        private TcpListener tcpListener;
-        private Thread listenThread;
+        protected TcpListener tcpListener;
+        protected Thread listenThread;
 
         //http://tech.pro/tutorial/704/csharp-tutorial-simple-threaded-tcp-server
 
-        public Server(ServerConfig config)
+        public Server()
         {
             // Set maximum number of threads
             ThreadPool.SetMaxThreads(20, 20);
-
-            Server.config = config;
         }
 
         public void CreateListener(IPAddress ip, int port)
@@ -35,18 +31,18 @@ namespace WebServer.Server
             this.listenThread.Start();
         }
 
-        public void Start()
+        public virtual void Start()
         {
-            CreateListener(IPAddress.Any, config.WebPort);
-            Console.WriteLine("Server has started on port 8080.{0}Waiting for a connection...", Environment.NewLine);
+            CreateListener(IPAddress.Any, ServerConfig.WebPort);
+            Console.WriteLine("Server has started on port {0}.{1}Waiting for a connection...", ServerConfig.WebPort, Environment.NewLine);
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
             this.tcpListener.Stop();
         }
 
-        public void Restart()
+        public virtual void Restart()
         {
             Stop();
             Start();
@@ -60,8 +56,8 @@ namespace WebServer.Server
             {
                 //blocks until a client has connected to the server
                 TcpClient client = this.tcpListener.AcceptTcpClient();
-                client.ReceiveTimeout = 5;
-                client.SendTimeout = 5;
+                //client.ReceiveTimeout = 5;
+                //client.SendTimeout = 5;
                 // Start timing request
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
@@ -79,8 +75,8 @@ namespace WebServer.Server
             }
         }
 
-        public static ServerConfig GetConfig() {
-            return Server.config;
-        }
+        //public static ServerConfig GetConfig() {
+        //    return Server.config;
+        //}
     }
 }

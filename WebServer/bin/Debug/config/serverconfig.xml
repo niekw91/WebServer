@@ -8,5 +8,6 @@
 	</server>
 	<controlserver>
 		<port>8081</port>
+		<root>controlroot\www</root>
 	</controlserver>
 </config>

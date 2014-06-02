@@ -11,20 +11,17 @@ namespace WebServer.Server
 {
     class ServerConfig
     {
-        private readonly String CONFIG_PATH = @"config\serverconfig.xml";
+        private static readonly String CONFIG_PATH = @"config\serverconfig.xml";
 
-        public int WebPort { get; set; }
-        public String Webroot { get; set; }
-        public String DefaultPage { get; set; }
-        public bool DirectoryBrowsing { get; set; }
+        public static int WebPort { get; set; }
+        public static String Webroot { get; set; }
+        public static String DefaultPage { get; set; }
+        public static bool DirectoryBrowsing { get; set; }
 
-        public int ControlPort { get; set; }
+        public static int ControlPort { get; set; }
+        public static String Controlroot { get; set; }
 
-        public ServerConfig()
-        {
-        }
-
-        public void Init()
+        public static void Init()
         {
             if (!File.Exists(CONFIG_PATH))
             {
@@ -41,11 +38,11 @@ namespace WebServer.Server
                 XmlNode controlServer = element.SelectSingleNode("controlserver");
                 // Set properties
                 SetProperties(server["port"].InnerText, server["webroot"].InnerText, server["default-page"].InnerText, 
-                    server["dir-browsing"].InnerText, controlServer["port"].InnerText);
+                    server["dir-browsing"].InnerText, controlServer["port"].InnerText, controlServer["root"].InnerText);
             }
         }
 
-        private void CreateConfig()
+        private static void CreateConfig()
         {
             // Defaults
             String webroot = @"webroot\www";
@@ -53,6 +50,7 @@ namespace WebServer.Server
             String dirBrowsing = "false";
             String defaultPage = "index.html;index.htm";
             String controlPort = "8081";
+            String controlroot = @"controlroot\www";
             // Create config directory
             Directory.CreateDirectory("config");
             // Create xml writer settings
@@ -74,22 +72,24 @@ namespace WebServer.Server
                 // Start writing control server configuration
                 xmlWriter.WriteStartElement("controlserver");
                 xmlWriter.WriteElementString("port", controlPort);
+                xmlWriter.WriteElementString("root", controlroot);
                 xmlWriter.WriteEndElement();
                 // End root
                 xmlWriter.WriteEndElement();
                 xmlWriter.Flush();
             }
             // Set properties
-            SetProperties(port, webroot, defaultPage, dirBrowsing, controlPort);
+            SetProperties(port, webroot, defaultPage, dirBrowsing, controlPort, controlroot);
         }
 
-        private void SetProperties(String port, String webroot, String defaultPage, String dirBrowsing, String controlPort)
+        private static void SetProperties(String port, String webroot, String defaultPage, String dirBrowsing, String controlPort, String controlroot)
         {
-            this.WebPort = Convert.ToInt32(port);
-            this.Webroot = webroot;
-            this.DefaultPage = defaultPage;
-            this.DirectoryBrowsing = Convert.ToBoolean(dirBrowsing);
-            this.ControlPort = Convert.ToInt32(controlPort);
+            WebPort = Convert.ToInt32(port);
+            Webroot = webroot;
+            DefaultPage = defaultPage;
+            DirectoryBrowsing = Convert.ToBoolean(dirBrowsing);
+            ControlPort = Convert.ToInt32(controlPort);
+            Controlroot = controlroot;
         }
     }
 }

@@ -13,10 +13,10 @@ namespace WebServer.Server
 
         public byte[] GetFileForUrlPath(string url)
         {
-            string path = Server.GetConfig().Webroot + url;
+            string path = ServerConfig.Webroot + url;
             if (url.EndsWith("/") || !url.Contains('.'))
             {
-                path += Server.GetConfig().DefaultPage.Split(';')[0];
+                path += ServerConfig.DefaultPage.Split(';')[0];
             }
             try
             {
@@ -28,7 +28,7 @@ namespace WebServer.Server
 
         public string ParseUrlToPath(string url)
         {
-            string path = Server.GetConfig().Webroot + url;
+            string path = ServerConfig.Webroot + url;
 
             return path;
         }
@@ -51,7 +51,7 @@ namespace WebServer.Server
             response.StatusCode = 200;
             response.StatusMessage = "OK";
 
-            response.Path = Server.GetConfig().Webroot + request.Url;
+            response.Path = ServerConfig.Webroot + request.Url;
             if (File.Exists(response.Path))
             {
                 response.Content = File.ReadAllBytes(response.Path);
