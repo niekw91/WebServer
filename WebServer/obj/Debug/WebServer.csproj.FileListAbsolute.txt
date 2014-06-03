@@ -9,3 +9,4 @@ C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\WebServer.e
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\WebServer.pdb
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.exe
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.pdb
+C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.csprojResolveAssemblyReference.cache
