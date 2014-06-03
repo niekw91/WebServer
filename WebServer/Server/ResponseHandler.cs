@@ -41,7 +41,21 @@ namespace WebServer.Server
             response.AddHeader("Connection", "close");
             response.AddHeader("Content-type", "text/html");
             response.AddHeader("Cache-Control", "no-cache, must-revalidate");
-            response.AddHeader("Server", "Homemade 0.1");
+            response.AddHeader("Server", ServerConfig.Name);
+
+            ReturnResponse(client.GetStream(), response);
+        }
+
+        public void HandleTimeout(TcpClient client) 
+        {
+            Response response = new Response();
+            response.StatusCode = 408;
+            response.StatusMessage = "Request Timeout";
+            response.AddHeader("Connection", "close");
+            response.AddHeader("Content-type", "text/html");
+            response.AddHeader("Cache-Control", "no-cache, must-revalidate");
+            response.AddHeader("Server", ServerConfig.Name);
+            response.Content = GetErrorPage(response.StatusCode);
 
             ReturnResponse(client.GetStream(), response);
         }
@@ -54,6 +68,12 @@ namespace WebServer.Server
             response.StatusCode = 200;
             response.StatusMessage = "OK";
 
+            if (!ParseValidUrl(request.Url))
+            {
+                request.Url = FixUrl(request.Url);
+                request.Url = request.Url + GetDefaultPage(request);
+            }
+
             response.Path = root + request.Url;
             if (File.Exists(response.Path))
             {
@@ -63,7 +83,7 @@ namespace WebServer.Server
             if (response.Content != null)
             {
                 response.AddHeader("Accept-Ranges", "bytes");
-                response.AddHeader("Connection", "Keep-Alive");
+                response.AddHeader("Connection", "keep-alive");
                 response.AddHeader("Content-Length", response.Content.Length.ToString());
                 response.AddHeader("Content-Type", response.ContentType);
                 response.AddHeader("Cache-Control", "none");
@@ -78,7 +98,7 @@ namespace WebServer.Server
                 response.AddHeader("Cache-Control", "no-cache, must-revalidate");
                 response.Content = GetErrorPage(response.StatusCode);
             }
-            response.AddHeader("Server", "Homemade 0.1");
+            response.AddHeader("Server", ServerConfig.Name);
 
             //response.Content = GetFileForUrlPath(response.Path);
             //string head = null;
@@ -138,12 +158,6 @@ namespace WebServer.Server
             }
             return null;
         }
-
-        //if (!ParseValidUrl(request.Url))
-        //{
-        //        request.Url = FixUrl(request.Url);
-        //        request.Url = request.Url + GetDefaultPage(request);
-        //}
 
         private bool ParseValidUrl(string url)
         {

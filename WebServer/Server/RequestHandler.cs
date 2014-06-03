@@ -12,8 +12,14 @@ namespace WebServer.Server
     class RequestHandler
     {
         public Stopwatch Timer { get; set; }
+        public int TimeoutMS { get; set; }
 
         private string _formDataContentType = "application/x-www-form-urlencoded";
+
+        public RequestHandler()
+        {
+            TimeoutMS = 2000;
+        }
 
         public Request ParseStringToRequest(string requestHeaders)
         {
@@ -53,75 +59,62 @@ namespace WebServer.Server
 
         public void HandleRequest(object paramaters)
         {
+            //System.Threading.Thread.Sleep(100);
             object[] param = (object[])paramaters;
             TcpClient client = (TcpClient)param[0];
             NetworkStream stream = client.GetStream();
 
-            //byte[] bytes = new byte[4096];
-            //int bytesRead;
-
-            //while (true)
-            //{
-            //    bytesRead = 0;
-
-            //    try
-            //    {
-            //        //blocks until a client sends a message
-            //        bytesRead = clientStream.Read(bytes, 0, 4096);
-            //    }
-            //    catch
-            //    {
-            //        //a socket error has occured
-            //        break;
-            //    }
-
-            //    if (bytesRead == 0)
-            //    {
-            //        //the client has disconnected from the server
-            //        break;
-            //    }
-
-            //    //message has successfully been received
-            //    //ASCIIEncoding encoder = new ASCIIEncoding();
-            //    //Console.WriteLine(encoder.GetString(bytes, 0, bytesRead));
-            
-            //}
-            byte[] bytes = new Byte[client.Available];
-
-            stream.Read(bytes, 0, bytes.Length);
-
-            //translate bytes of request to string
-            String data = Encoding.UTF8.GetString(bytes);
-            Console.WriteLine(data);
-            Request request = ParseStringToRequest(data);
             // Create response handler
             ResponseHandler rsHandler = new ResponseHandler();
-            //new Regex("^GET").IsMatch(data)
-            if (request != null && (request.Method == "POST" || request.Method == "GET"))
+
+            bool timeout = false;
+            // Block until data or timeout
+            while (!stream.DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS) { timeout = true; break; } }
+
+            if (timeout)
             {
-                // Set full url
-                request.FullUrl = request.Url;
-                // Parse request values
-                ParseRequestValues(request);
-                // Set root folder
-                
-                String root = (String)param[1];
-
-                foreach (KeyValuePair<String, String> kvp in request.Values)
-                {
-                    Console.WriteLine(String.Format("key: {0} value {1}", kvp.Key, kvp.Value));
-                }
-
-                Console.WriteLine("Start handler");
-                rsHandler.HandleResponse(client, request, root);
+                rsHandler.HandleTimeout(client);
             }
             else
             {
-                Console.WriteLine("Invalid request");
-                rsHandler.HandleBadRequest(client);
+                // Read content from stream and Parse to Request
+                byte[] bytes = new Byte[client.Available];
+
+                stream.Read(bytes, 0, bytes.Length);
+
+                //translate bytes of request to string
+                String data = Encoding.UTF8.GetString(bytes);
+                Console.WriteLine(data);
+                Request request = ParseStringToRequest(data);
+
+                // Check if request is valid
+                //new Regex("^GET").IsMatch(data)
+                if (request != null && (request.Method == "POST" || request.Method == "GET"))
+                {
+                    // Set full url
+                    request.FullUrl = request.Url;
+                    // Parse request values
+                    ParseRequestValues(request);
+                    // Set root folder
+
+                    String root = (String)param[1];
+
+                    foreach (KeyValuePair<String, String> kvp in request.Values)
+                    {
+                        Console.WriteLine(String.Format("key: {0} value {1}", kvp.Key, kvp.Value));
+                    }
+
+                    Console.WriteLine("Start handler");
+                    rsHandler.HandleResponse(client, request, root);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid request");
+                    rsHandler.HandleBadRequest(client);
+                }
             }
            
-
+            // Stop connection and stop total handle time
             client.Close();
             Timer.Stop();
             Console.WriteLine("Total time: " + Timer.ElapsedMilliseconds + " ms");
