@@ -12,6 +12,9 @@ namespace WebServer.Server
     class RequestHandler
     {
         public Stopwatch Timer { get; set; }
+
+        private string _formDataContentType = "application/x-www-form-urlencoded";
+
         public Request ParseStringToRequest(string requestHeaders)
         {
             string[] reqParts = requestHeaders.Split(Environment.NewLine.ToCharArray());
@@ -30,9 +33,17 @@ namespace WebServer.Server
                 {
                     if (!String.IsNullOrEmpty(line))
                     {
+                        if (!line.Contains(":"))
+                            break;
+
                         string[] headerParts = line.Split(':');
-                        request.AddHeader(headerParts[0].Trim(), headerParts[1].Trim());
+                        request.AddHeader(headerParts[0].Trim().ToLower(), headerParts[1].Trim());
                     }
+                }
+
+                if (request.GetHeader("content-type") == _formDataContentType)
+                {
+                    request.FormDataString = reqParts[reqParts.Length - 1];
                 }
 
                 return request;
@@ -131,7 +142,10 @@ namespace WebServer.Server
 
         private void ParsePostValues(Request request)
         {
-
+            if (request.GetHeader("content-type") == _formDataContentType)
+            {
+                request.Values = ParseFormData(request.FormDataString);
+            }
         }
 
         private void ParseGetValues(Request request)
@@ -140,18 +154,23 @@ namespace WebServer.Server
             request.Url = urlParts[0];
             if (urlParts.Length > 1)
             {
-                Dictionary<string, string> values = new Dictionary<string, string>();
-                string[] parameters = urlParts[1].Split('&');
-                for (int i = 0; i < parameters.Length; i++)
-                {
-                    string[] keyValues = parameters[i].Split('=');
-                    if (keyValues.Length == 2)
-                    {
-                        values.Add(keyValues[0].ToLower(), keyValues[1]);
-                    }
-                }
-                request.Values = values;
+                request.Values = ParseFormData(urlParts[1]);
             }
+        }
+
+        private Dictionary<string, string> ParseFormData(string formDataStr)
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>();
+            string[] parameters = formDataStr.Split('&');
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                string[] keyValues = parameters[i].Split('=');
+                if (keyValues.Length == 2)
+                {
+                    values.Add(keyValues[0].ToLower(), keyValues[1]);
+                }
+            }
+            return values;
         }
     }
 }

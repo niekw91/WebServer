@@ -17,7 +17,7 @@ namespace WebServer
             ControlServer.ControlServer cServer = new ControlServer.ControlServer();
 
             server.Start();
-            cServer.Start();
+            //cServer.Start();
 
 
             Console.Read();

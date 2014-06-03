@@ -24,7 +24,9 @@ namespace WebServer.Server
 
         public string GetHeader(string header)
         {
-            return _headers[header];
+            if(_headers.ContainsKey(header))
+                return _headers[header];
+            return null;
         }
     }
 }

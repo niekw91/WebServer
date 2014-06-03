@@ -38,6 +38,9 @@ namespace WebServer.Server
             Response response = new Response();
             response.StatusCode = 400;
             response.StatusMessage = "Bad Request";
+            response.AddHeader("Connection", "close");
+            response.AddHeader("Content-type", "text/html");
+            response.AddHeader("Cache-Control", "no-cache, must-revalidate");
             response.AddHeader("Server", "Homemade 0.1");
 
             ReturnResponse(client.GetStream(), response);
@@ -70,6 +73,9 @@ namespace WebServer.Server
             } else {
                 response.StatusCode = 404;
                 response.StatusMessage = "Not Found";
+                response.AddHeader("Connection", "close");
+                response.AddHeader("Content-type", "text/html");
+                response.AddHeader("Cache-Control", "no-cache, must-revalidate");
                 response.Content = GetErrorPage(response.StatusCode);
             }
             response.AddHeader("Server", "Homemade 0.1");
@@ -129,6 +135,39 @@ namespace WebServer.Server
             if (File.Exists(String.Format(path, statusCode)))
             {
                 return File.ReadAllBytes(String.Format(path, statusCode));
+            }
+            return null;
+        }
+
+        //if (!ParseValidUrl(request.Url))
+        //{
+        //        request.Url = FixUrl(request.Url);
+        //        request.Url = request.Url + GetDefaultPage(request);
+        //}
+
+        private bool ParseValidUrl(string url)
+        {
+            string[] urlParts = url.Split('/');
+            return urlParts[urlParts.Length - 1].Contains('.');
+        }
+
+        private string FixUrl(string url)
+        {
+            string[] urlParts = url.Split('/');
+            if (String.IsNullOrEmpty(urlParts[urlParts.Length - 1]))
+            {
+                url += "/";
+            }
+            return url;
+        }
+
+        private string GetDefaultPage(Request request)
+        {
+            string[] defaultPages = ServerConfig.DefaultPage.Split(';');
+            foreach (string defPage in defaultPages)
+            {
+                if (File.Exists(ServerConfig.Webroot + request.Url + defPage))
+                    return defPage;
             }
             return null;
         }
