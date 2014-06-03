@@ -14,11 +14,13 @@ namespace WebServer.Server
     {
         protected TcpListener tcpListener;
         protected Thread listenThread;
+        protected String rootFolder;
 
         //http://tech.pro/tutorial/704/csharp-tutorial-simple-threaded-tcp-server
 
-        public Server()
+        public Server(string root)
         {
+            this.rootFolder = root;
             // Set maximum number of threads
             ThreadPool.SetMaxThreads(20, 20);
         }
@@ -61,7 +63,7 @@ namespace WebServer.Server
                 // Start timing request
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
- 
+
                 Console.WriteLine("----------------");
                 Console.WriteLine("A client connected.");
                 Console.WriteLine("IP Address: {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
@@ -69,9 +71,9 @@ namespace WebServer.Server
                 //with connected client
                 RequestHandler rqHandler = new RequestHandler();
                 rqHandler.Timer = timer;
-                ThreadPool.QueueUserWorkItem(rqHandler.HandleRequest, client);
-                //Thread clientThread = new Thread(new ParameterizedThreadStart(rqHandler.HandleRequest));
-                //clientThread.Start(client);
+                // Create object array with parameters for request handler
+                object[] parameters = new object[2] { client, rootFolder };
+                ThreadPool.QueueUserWorkItem(rqHandler.HandleRequest, parameters);
             }
         }
 

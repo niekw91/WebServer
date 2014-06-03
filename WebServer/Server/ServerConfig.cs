@@ -13,6 +13,7 @@ namespace WebServer.Server
     {
         private static readonly String CONFIG_PATH = @"config\serverconfig.xml";
 
+        public static String Name { get; set; }
         public static int WebPort { get; set; }
         public static String Webroot { get; set; }
         public static String DefaultPage { get; set; }
@@ -34,10 +35,11 @@ namespace WebServer.Server
                 // Get root element
                 XmlElement element = doc.DocumentElement;
                 // Get elements
+                XmlNode general = element.SelectSingleNode("general");
                 XmlNode server = element.SelectSingleNode("server");
                 XmlNode controlServer = element.SelectSingleNode("controlserver");
                 // Set properties
-                SetProperties(server["port"].InnerText, server["webroot"].InnerText, server["default-page"].InnerText, 
+                SetProperties(general["name"].InnerText, server["port"].InnerText, server["webroot"].InnerText, server["default-page"].InnerText, 
                     server["dir-browsing"].InnerText, controlServer["port"].InnerText, controlServer["root"].InnerText);
             }
         }
@@ -51,6 +53,7 @@ namespace WebServer.Server
             String defaultPage = "index.html;index.htm";
             String controlPort = "8081";
             String controlroot = @"controlroot\www";
+            String name = "WebServer";
             // Create config directory
             Directory.CreateDirectory("config");
             // Create xml writer settings
@@ -62,6 +65,10 @@ namespace WebServer.Server
                 // Start root
                 xmlWriter.WriteStartDocument();
                 xmlWriter.WriteStartElement("config");
+                // Start writing global configuration
+                xmlWriter.WriteStartElement("general");
+                xmlWriter.WriteElementString("name", name);
+                xmlWriter.WriteEndElement();
                 // Start writing server configuration
                 xmlWriter.WriteStartElement("server");
                 xmlWriter.WriteElementString("port", port);
@@ -79,11 +86,12 @@ namespace WebServer.Server
                 xmlWriter.Flush();
             }
             // Set properties
-            SetProperties(port, webroot, defaultPage, dirBrowsing, controlPort, controlroot);
+            SetProperties(name, port, webroot, defaultPage, dirBrowsing, controlPort, controlroot);
         }
 
-        private static void SetProperties(String port, String webroot, String defaultPage, String dirBrowsing, String controlPort, String controlroot)
+        private static void SetProperties(String name, String port, String webroot, String defaultPage, String dirBrowsing, String controlPort, String controlroot)
         {
+            Name = name;
             WebPort = Convert.ToInt32(port);
             Webroot = webroot;
             DefaultPage = defaultPage;

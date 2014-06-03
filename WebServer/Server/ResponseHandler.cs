@@ -46,7 +46,7 @@ namespace WebServer.Server
             ReturnResponse(client.GetStream(), response);
         }
 
-        public void HandleResponse(TcpClient client, Request request)
+        public void HandleResponse(TcpClient client, Request request, String root)
         {
             NetworkStream stream = client.GetStream();
             //@"C:\Users\Remi\Documents\GitHub\WebServer\WebServer\index.html"
@@ -54,7 +54,7 @@ namespace WebServer.Server
             response.StatusCode = 200;
             response.StatusMessage = "OK";
 
-            response.Path = ServerConfig.Webroot + request.Url;
+            response.Path = root + request.Url;
             if (File.Exists(response.Path))
             {
                 response.Content = File.ReadAllBytes(response.Path);

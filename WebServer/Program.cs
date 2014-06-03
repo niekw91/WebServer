@@ -13,8 +13,8 @@ namespace WebServer
         {
             ServerConfig.Init();
 
-            Server.Server server = new Server.Server();
-            ControlServer.ControlServer cServer = new ControlServer.ControlServer();
+            Server.Server server = new Server.Server(ServerConfig.Webroot);
+            ControlServer.ControlServer cServer = new ControlServer.ControlServer(ServerConfig.Controlroot);
 
             server.Start();
             //cServer.Start();

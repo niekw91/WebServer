@@ -51,9 +51,10 @@ namespace WebServer.Server
             return null;
         }
 
-        public void HandleRequest(object clientReq)
+        public void HandleRequest(object paramaters)
         {
-            TcpClient client = (TcpClient)clientReq;
+            object[] param = (object[])paramaters;
+            TcpClient client = (TcpClient)param[0];
             NetworkStream stream = client.GetStream();
 
             //byte[] bytes = new byte[4096];
@@ -102,6 +103,9 @@ namespace WebServer.Server
                 request.FullUrl = request.Url;
                 // Parse request values
                 ParseRequestValues(request);
+                // Set root folder
+                
+                String root = (String)param[1];
 
                 foreach (KeyValuePair<String, String> kvp in request.Values)
                 {
@@ -109,7 +113,7 @@ namespace WebServer.Server
                 }
 
                 Console.WriteLine("Start handler");
-                rsHandler.HandleResponse(client, request);
+                rsHandler.HandleResponse(client, request, root);
             }
             else
             {

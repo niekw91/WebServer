@@ -10,7 +10,7 @@ namespace WebServer.ControlServer
 {
     class ControlServer : Server.Server
     {
-        public ControlServer() : base()
+        public ControlServer(string root) : base(root)
         {
             
         }
