@@ -70,5 +70,36 @@ namespace WebServer.Server
             }
         }
 
+        // Set default headers true if success, false if response is invalid
+
+        public bool SetDefaultHeaders()
+        {
+            bool valid = false;
+            if (Content != null)
+            {
+                AddHeader("Accept-Ranges", "bytes");
+                AddHeader("Connection", "keep-alive");
+                AddHeader("Content-Length", Content.Length.ToString());
+                AddHeader("Content-Type", ContentType);
+                AddHeader("Cache-Control", "none");
+                AddHeader("Date", CurrentDate);
+                AddHeader("Keep-Alive", "timeout=5, max=100");
+                AddHeader("Last-Modified", CurrentDate);
+                valid = true;
+            }
+            else
+            {
+                StatusCode = 404;
+                StatusMessage = "Not Found";
+                AddHeader("Connection", "keep-alive");
+                AddHeader("Content-type", "text/html");
+                AddHeader("Cache-Control", "no-cache, must-revalidate");
+                valid = false;
+            }
+            AddHeader("Server", ServerConfig.Name);
+
+            return valid;
+        }
+
     }
 }

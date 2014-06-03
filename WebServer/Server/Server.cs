@@ -71,10 +71,22 @@ namespace WebServer.Server
                 //with connected client
                 RequestHandler rqHandler = new RequestHandler();
                 rqHandler.Timer = timer;
+                rqHandler.Client = client;
                 // Create object array with parameters for request handler
-                object[] parameters = new object[2] { client, rootFolder };
-                ThreadPool.QueueUserWorkItem(rqHandler.HandleRequest, parameters);
+                //object[] parameters = new object[2] { client, rootFolder };
+                ThreadPool.QueueUserWorkItem(DoRequest, rqHandler);
             }
+        }
+
+        public void DoRequest(object rqh)
+        {
+            // Evnetueel een web object maken die de request en response afhandeld,
+            // aparte class die de requesthandler en response handler bijhoud en aanstuurd
+
+            // Fail met post, als de header is gestuurd maar de data nog niet gaat de request kapot voor dat de data er is.
+
+            RequestHandler rqHandler = (RequestHandler)rqh;
+            rqHandler.HandleRequest(rootFolder);
         }
 
         //public static ServerConfig GetConfig() {

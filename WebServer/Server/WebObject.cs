@@ -28,5 +28,15 @@ namespace WebServer.Server
                 return _headers[header];
             return null;
         }
+
+        public bool RemoveHeader(string header)
+        {
+            return _headers.Remove(header);
+        }
+
+        public void ClearHeaders()
+        {
+            _headers.Clear();
+        }
     }
 }

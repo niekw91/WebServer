@@ -13,6 +13,7 @@ namespace WebServer.Server
     {
         public Stopwatch Timer { get; set; }
         public int TimeoutMS { get; set; }
+        public TcpClient Client { get; set; }
 
         private string _formDataContentType = "application/x-www-form-urlencoded";
 
@@ -57,48 +58,41 @@ namespace WebServer.Server
             return null;
         }
 
-        public void HandleRequest(object paramaters)
+        public void HandleRequest(string responseRoot)
         {
             //System.Threading.Thread.Sleep(100);
-            object[] param = (object[])paramaters;
-            TcpClient client = (TcpClient)param[0];
-            NetworkStream stream = client.GetStream();
+            //object[] param = (object[])paramaters;
+            //TcpClient client = (TcpClient)param[0];
+            NetworkStream stream = Client.GetStream();
 
             // Create response handler
             ResponseHandler rsHandler = new ResponseHandler();
 
             bool timeout = false;
             // Block until data or timeout
-            while (!stream.DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS) { timeout = true; break; } }
+            while (!stream.DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS || !Client.Connected) { timeout = true; break; } }
 
             if (timeout)
             {
                 // Handle timeout response
-                rsHandler.HandleTimeout(client);
+                rsHandler.HandleTimeout(Client);
             }
             else
             {
-                // Read content from stream and Parse to Request
-                byte[] bytes = new Byte[client.Available];
-
-                stream.Read(bytes, 0, bytes.Length);
-
-                //translate bytes of request to string
-                String data = Encoding.UTF8.GetString(bytes);
-                Console.WriteLine(data);
-                Request request = ParseStringToRequest(data);
+                Console.WriteLine(Client.Available);
+                // Get request Object
+                Request request = RequestToObject(stream, Client.Available);
 
                 // Check if request is valid
-                //new Regex("^GET").IsMatch(data)
-                if (request != null && (request.Method == "POST" || request.Method == "GET"))
+                if (IsRequestValid(request))
                 {
                     // Set full url
                     request.FullUrl = request.Url;
                     // Parse request values
                     ParseRequestValues(request);
-                    // Set root folder
 
-                    String root = (String)param[1];
+                    // Set root folder
+                    //String root = (String)param[1];
 
                     foreach (KeyValuePair<String, String> kvp in request.Values)
                     {
@@ -106,21 +100,39 @@ namespace WebServer.Server
                     }
 
                     Console.WriteLine("Start handler");
-                    rsHandler.HandleResponse(client, request, root);
+                    rsHandler.HandleResponse(Client, request, responseRoot);
                 }
                 else
                 {
                     Console.WriteLine("Invalid request");
-                    rsHandler.HandleBadRequest(client);
+                    rsHandler.HandleBadRequest(Client);
                 }
             }
            
             // Stop connection and stop total handle time
-            client.Close();
+            Client.Close();
             Timer.Stop();
             Console.WriteLine("Total time: " + Timer.ElapsedMilliseconds + " ms");
             Console.WriteLine("Close connection");
             Console.WriteLine("----------------");
+        }
+
+        private Request RequestToObject(NetworkStream stream, int length)
+        {
+            // Read content from stream and Parse to Request
+            byte[] bytes = new Byte[length];
+
+            stream.Read(bytes, 0, bytes.Length);
+
+            //translate bytes of request to string
+            String data = Encoding.UTF8.GetString(bytes);
+            Console.WriteLine(data);
+            return ParseStringToRequest(data);
+        }
+
+        private bool IsRequestValid(Request request)
+        {
+            return (request != null && (request.Method == "POST" || request.Method == "GET"));
         }
 
 
