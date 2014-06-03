@@ -73,6 +73,7 @@ namespace WebServer.Server
 
             if (timeout)
             {
+                // Handle timeout response
                 rsHandler.HandleTimeout(client);
             }
             else
