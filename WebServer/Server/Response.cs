@@ -70,6 +70,10 @@ namespace WebServer.Server
             {
                 case "png": case "jpg": case "jpeg":
                     return "image/"+PathExtension;
+                case "js":
+                    return "text/javascript";
+                case "css":
+                    return "text/css";
                 default:
                     return "text/html";
             }
