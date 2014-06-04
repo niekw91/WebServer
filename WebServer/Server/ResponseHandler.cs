@@ -60,6 +60,25 @@ namespace WebServer.Server
             ReturnResponse(client.GetStream(), response);
         }
 
+        public void HandlePost(Request request, Response response)
+        {
+            try
+            {
+                if (request.Values.Count > 0)
+                {
+                    String webPort = request.Values["web-port"];
+                    String controlPort = request.Values["control-port"];
+                    String webRoot = request.Values["webroot"];
+                    String defaultPage = request.Values["default-page"];
+                    // Write config file
+                    ServerConfig.WriteConfig(webPort, controlPort, webRoot, defaultPage);
+                    // Set response
+                    response.Content = Encoding.ASCII.GetBytes("Config saved!");
+                }
+            }
+            catch (KeyNotFoundException) { }
+        }
+
         public void HandleResponse(TcpClient client, Request request, String root)
         {
             NetworkStream stream = client.GetStream();
@@ -88,6 +107,10 @@ namespace WebServer.Server
             if (File.Exists(response.Path))
             {
                 response.Content = File.ReadAllBytes(response.Path);
+                // Parse config
+                //HTMLParser parser = new HTMLParser();
+                //string content = parser.ParseHTMLConfig(response.Path);
+                //response.Content = Encoding.ASCII.GetBytes(content);
             }
 
             if(!response.SetDefaultHeaders())

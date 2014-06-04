@@ -99,5 +99,28 @@ namespace WebServer.Server
             ControlPort = Convert.ToInt32(controlPort);
             Controlroot = controlroot;
         }
+
+        internal static void WriteConfig(string webPort, string controlPort, string webRoot, string defaultPage)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(CONFIG_PATH);
+            // Get root element
+            XmlElement element = doc.DocumentElement;
+            // Write elements
+            XmlNode server = element.SelectSingleNode("server");
+            XmlNode webPortNode = server.SelectSingleNode("port");
+            webPortNode.InnerText = webPort;
+            XmlNode webRootNode = server.SelectSingleNode("webroot");
+            webRootNode.InnerText = webRoot;
+            XmlNode defaultPageNode = server.SelectSingleNode("default-page");
+            defaultPageNode.InnerText = defaultPage;
+            XmlNode controlServer = element.SelectSingleNode("controlserver");
+            XmlNode controlPortNode = controlServer.SelectSingleNode("port");
+            controlPortNode.InnerText = controlPort;
+            // Save config
+            doc.Save(CONFIG_PATH);
+            // Set properties
+            SetProperties(Name, webPort, webRoot, defaultPage, DirectoryBrowsing.ToString(), controlPort, Controlroot);
+        }
     }
 }

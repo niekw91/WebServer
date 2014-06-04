@@ -10,3 +10,6 @@ C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\WebServer.p
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.exe
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.pdb
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.csprojResolveAssemblyReference.cache
+C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.dll
+C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.xml
