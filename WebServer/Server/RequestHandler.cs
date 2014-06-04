@@ -180,6 +180,8 @@ namespace WebServer.Server
         {
             Console.WriteLine("Before body check");
             bool timeout = false;
+            body = body.Trim();
+            Console.WriteLine("Content-Length: " + request.GetHeader("content-length") + " Body: " + body + "<- body end");
             if (request.GetHeader("content-length") != null && Convert.ToInt32(request.GetHeader("content-length")) > 0 && String.IsNullOrEmpty(body))
             {
                 while (!Client.GetStream().DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS || !Client.Connected) { timeout = true; break; } }
