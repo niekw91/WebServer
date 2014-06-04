@@ -64,6 +64,9 @@ namespace WebServer.Server
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
 
+                // HTTPS secure connection stream
+                //SslStream stream = new SslStream(client.GetStream(), false);
+
                 Console.WriteLine("----------------");
                 Console.WriteLine("A client connected.");
                 Console.WriteLine("IP Address: {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
@@ -85,8 +88,34 @@ namespace WebServer.Server
 
             // Fail met post, als de header is gestuurd maar de data nog niet gaat de request kapot voor dat de data er is.
 
+            // Eventueel response parsen, het content laden weghalen om dit na verwerking pas te doen
+
             RequestHandler rqHandler = (RequestHandler)rqh;
-            rqHandler.HandleRequest(rootFolder);
+            ResponseHandler rsHandler = rqHandler.HandleRequest();
+
+            if (rqHandler.IsRequestValid(rqHandler.Request))
+            {
+                Response response = rsHandler.GetResponseForRequest(rqHandler.Request, rootFolder);
+
+                // Handle request in code
+                if (!response.IsErrorResponse())
+                {
+                    //Route url
+                    RouteHandler rtHandler = new RouteHandler(rqHandler.Request, response);
+                    rtHandler.RouteUrl();
+                }
+
+                rsHandler.ReturnResponse(rqHandler.Client.GetStream(), response);
+            }
+
+            
+            //rsHandler.HandleResponse(rqHandler.Client, rqHandler.Request, rootFolder);
+
+            rqHandler.Client.Close();
+            rqHandler.Timer.Stop();
+            Console.WriteLine("Total time: " + rqHandler.Timer.ElapsedMilliseconds + " ms");
+            Console.WriteLine("Close connection");
+            Console.WriteLine("----------------");
         }
 
         //public static ServerConfig GetConfig() {

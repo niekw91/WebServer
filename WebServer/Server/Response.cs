@@ -34,6 +34,11 @@ namespace WebServer.Server
             Url = request.Url;
         }
 
+        public bool IsErrorResponse()
+        {
+            return (StatusCode > 400 && StatusCode < 600);
+        }
+
         public string GetStatusAsString()
         {
             return HTTPVersion + " " + StatusCode + " " + StatusMessage + Environment.NewLine;

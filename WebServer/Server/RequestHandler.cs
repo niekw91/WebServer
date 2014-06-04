@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
+using System.Net.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace WebServer.Server
         public Stopwatch Timer { get; set; }
         public int TimeoutMS { get; set; }
         public TcpClient Client { get; set; }
+
+        public Request Request { get; set; }
 
         private string _formDataContentType = "application/x-www-form-urlencoded";
 
@@ -43,8 +46,24 @@ namespace WebServer.Server
                         if (!line.Contains(":"))
                             break;
 
-                        string[] headerParts = line.Split(':');
+                        string[] headerParts = line.Split(new char[] { ':' }, 2);
                         request.AddHeader(headerParts[0].Trim().ToLower(), headerParts[1].Trim());
+                    }
+                }
+
+                if (request.GetHeader("host") != null)
+                {
+                    string hostHeader = request.GetHeader("host");
+                    if (hostHeader.Contains(":"))
+                    {
+                        string[] hostParts = hostHeader.Split(':');
+                        request.Host = hostParts[0];
+                        request.Port = Convert.ToInt32(hostParts[1]);
+                    }
+                    else
+                    {
+                        request.Host = hostHeader;
+                        request.Port = 80;
                     }
                 }
 
@@ -58,12 +77,14 @@ namespace WebServer.Server
             return null;
         }
 
-        public void HandleRequest(string responseRoot)
+        public ResponseHandler HandleRequest()
         {
             //System.Threading.Thread.Sleep(100);
             //object[] param = (object[])paramaters;
             //TcpClient client = (TcpClient)param[0];
+
             NetworkStream stream = Client.GetStream();
+            //SslStream stream = new SslStream(Client.GetStream(), false);
 
             // Create response handler
             ResponseHandler rsHandler = new ResponseHandler();
@@ -100,7 +121,8 @@ namespace WebServer.Server
                     }
 
                     Console.WriteLine("Start handler");
-                    rsHandler.HandleResponse(Client, request, responseRoot);
+                    //rsHandler.HandleResponse(Client, request, responseRoot);
+                    Request = request;
                 }
                 else
                 {
@@ -110,14 +132,10 @@ namespace WebServer.Server
             }
            
             // Stop connection and stop total handle time
-            Client.Close();
-            Timer.Stop();
-            Console.WriteLine("Total time: " + Timer.ElapsedMilliseconds + " ms");
-            Console.WriteLine("Close connection");
-            Console.WriteLine("----------------");
+            return rsHandler;
         }
 
-        private Request RequestToObject(NetworkStream stream, int length)
+        private Request RequestToObject(System.IO.Stream stream, int length)
         {
             // Read content from stream and Parse to Request
             byte[] bytes = new Byte[length];
@@ -130,7 +148,7 @@ namespace WebServer.Server
             return ParseStringToRequest(data);
         }
 
-        private bool IsRequestValid(Request request)
+        public bool IsRequestValid(Request request)
         {
             return (request != null && (request.Method == "POST" || request.Method == "GET"));
         }
@@ -144,6 +162,7 @@ namespace WebServer.Server
                     ParseGetValues(request);
                     break;
                 case "POST":
+                    ParseGetValues(request);
                     ParsePostValues(request);
                     break;
             }
@@ -154,7 +173,7 @@ namespace WebServer.Server
         {
             if (request.GetHeader("content-type") == _formDataContentType)
             {
-                request.Values = ParseFormData(request.FormDataString);
+                request.Values = ParseFormData(request.FormDataString, request.Values);
             }
         }
 
@@ -164,13 +183,13 @@ namespace WebServer.Server
             request.Url = urlParts[0];
             if (urlParts.Length > 1)
             {
-                request.Values = ParseFormData(urlParts[1]);
+                request.Values = ParseFormData(urlParts[1], request.Values);
             }
         }
 
-        private Dictionary<string, string> ParseFormData(string formDataStr)
+        private Dictionary<string, string> ParseFormData(string formDataStr, Dictionary<string, string> values)
         {
-            Dictionary<string, string> values = new Dictionary<string, string>();
+            //Dictionary<string, string> values = ((valuesDict == null) ? new Dictionary<string, string>() : valuesDict);
             string[] parameters = formDataStr.Split('&');
             for (int i = 0; i < parameters.Length; i++)
             {
