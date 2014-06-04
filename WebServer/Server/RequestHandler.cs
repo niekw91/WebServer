@@ -67,11 +67,6 @@ namespace WebServer.Server
                     }
                 }
 
-                if (request.GetHeader("content-type") == _formDataContentType)
-                {
-                    request.FormDataString = reqParts[reqParts.Length - 1];
-                }
-
                 return request;
             }
             return null;
@@ -92,6 +87,8 @@ namespace WebServer.Server
             bool timeout = false;
             // Block until data or timeout
             while (!stream.DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS || !Client.Connected) { timeout = true; break; } }
+            //byte[] data = ReadFully(stream);
+            //timeout = (data == null);
 
             if (timeout)
             {
@@ -102,27 +99,40 @@ namespace WebServer.Server
             {
                 Console.WriteLine(Client.Available);
                 // Get request Object
-                Request request = RequestToObject(stream, Client.Available);
+                string data = StreamToString(stream, Client.Available);
 
                 // Check if request is valid
-                if (IsRequestValid(request))
+                //if (IsRequestValid(request))
+                if(!String.IsNullOrEmpty(data))
                 {
-                    // Set full url
-                    request.FullUrl = request.Url;
-                    // Parse request values
-                    ParseRequestValues(request);
+                    Request request = ParseStringToRequest(data);
+                    string body = GetRequestBodyString(data.Split(new string[] { Environment.NewLine }, StringSplitOptions.None));
 
-                    // Set root folder
-                    //String root = (String)param[1];
-
-                    foreach (KeyValuePair<String, String> kvp in request.Values)
+                    Console.WriteLine("Body: " + body);
+                    if (!CheckIfBodyAndAdd(request, body))
                     {
-                        Console.WriteLine(String.Format("key: {0} value {1}", kvp.Key, kvp.Value));
+                        // Handle timeout response
+                        rsHandler.HandleTimeout(Client);
                     }
+                    else
+                    {
+                        // Set full url
+                        request.FullUrl = request.Url;
+                        // Parse request values
+                        ParseRequestValues(request);
 
-                    Console.WriteLine("Start handler");
-                    //rsHandler.HandleResponse(Client, request, responseRoot);
-                    Request = request;
+                        // Set root folder
+                        //String root = (String)param[1];
+
+                        foreach (KeyValuePair<String, String> kvp in request.Values)
+                        {
+                            Console.WriteLine(String.Format("key: {0} value {1}", kvp.Key, kvp.Value));
+                        }
+
+                        Console.WriteLine("Start handler");
+                        //rsHandler.HandleResponse(Client, request, responseRoot);
+                        Request = request;
+                    }
                 }
                 else
                 {
@@ -135,7 +145,7 @@ namespace WebServer.Server
             return rsHandler;
         }
 
-        private Request RequestToObject(System.IO.Stream stream, int length)
+        private string StreamToString(System.IO.Stream stream, int length)
         {
             // Read content from stream and Parse to Request
             byte[] bytes = new Byte[length];
@@ -145,8 +155,48 @@ namespace WebServer.Server
             //translate bytes of request to string
             String data = Encoding.UTF8.GetString(bytes);
             Console.WriteLine(data);
-            return ParseStringToRequest(data);
+            return data;
         }
+
+        private string GetRequestBodyString(string[] lines)
+        {
+            Console.WriteLine(lines.Length);
+            bool bodyFound = false;
+            string bodyContent = null;
+            foreach (string line in lines)
+            {
+                if (bodyFound)
+                    bodyContent += line + Environment.NewLine;
+                if (String.IsNullOrEmpty(line) && !bodyFound)
+                {
+                    bodyFound = true;
+                }
+            }
+
+            return bodyContent;
+        }
+
+        private bool CheckIfBodyAndAdd(WebServer.Server.Request request, string body)
+        {
+            Console.WriteLine("Before body check");
+            bool timeout = false;
+            if (request.GetHeader("content-length") != null && Convert.ToInt32(request.GetHeader("content-length")) > 0 && String.IsNullOrEmpty(body))
+            {
+                while (!Client.GetStream().DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS || !Client.Connected) { timeout = true; break; } }
+
+                Console.WriteLine("Before read body");
+                body = StreamToString(Client.GetStream(), Client.Available);
+            }
+
+            request.Body = body;
+
+            return !timeout;
+        }
+
+        //private Request ParseRequestFromString(string data)
+        //{
+        //    return ParseStringToRequest(data);
+        //}
 
         public bool IsRequestValid(Request request)
         {
@@ -173,7 +223,7 @@ namespace WebServer.Server
         {
             if (request.GetHeader("content-type") == _formDataContentType)
             {
-                request.Values = ParseFormData(request.FormDataString, request.Values);
+                request.Values = ParseFormData(request.Body, request.Values);
             }
         }
 
