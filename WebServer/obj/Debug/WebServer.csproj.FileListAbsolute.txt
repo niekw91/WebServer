@@ -13,3 +13,6 @@ C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.c
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.dll
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.xml
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.dll
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.xml
