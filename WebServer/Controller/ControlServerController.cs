@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebServer.Utilities.Authentication;
 using WebServer.Utilities.HTML;
 
 namespace WebServer.Server
@@ -19,6 +20,10 @@ namespace WebServer.Server
                         GetConfiguration();
                     else if (Request.Method == "POST")
                         PostConfiguration();
+                    break;
+                case "/index.html":
+                    if (Request.Method == "POST")
+                        Login();
                     break;
             }
         }
@@ -51,5 +56,25 @@ namespace WebServer.Server
             catch (KeyNotFoundException) { }
         }
 
+        private void Login()
+        {
+            try
+            {
+                if (Request.Values.Count > 0)
+                {
+                    String username = Request.Values["username"];
+                    String password = Request.Values["password"];
+                    // Check if login is valid
+                    bool loggedIn = Authentication.Login(username, password);
+                    if (loggedIn)
+                    {
+                        //Response.Path = @"controlroot\www\configuration.html";
+                        //GetConfiguration();
+                    }
+                        
+                }
+            }
+            catch (KeyNotFoundException) { }
+        }
     }
 }

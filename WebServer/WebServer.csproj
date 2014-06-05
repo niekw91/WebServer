@@ -35,6 +35,9 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>packages\MySql.Data.6.8.3\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -61,6 +64,7 @@
     <Compile Include="Server\ServerConfig.cs" />
     <Compile Include="Controller\ServerController.cs" />
     <Compile Include="Server\WebObject.cs" />
+    <Compile Include="Utilities\Authentication\Authentication.cs" />
     <Compile Include="Utilities\Database\MySQLDatabaseConnection.cs" />
     <Compile Include="Utilities\HTML\HTMLParser.cs" />
     <Compile Include="Utilities\Interfaces\IDatabaseConnection.cs" />

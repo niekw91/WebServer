@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebServer.Server;
+using WebServer.Utilities.Authentication;
 
 namespace WebServer
 {

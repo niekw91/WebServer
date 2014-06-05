@@ -81,8 +81,8 @@ namespace WebServer.Server
             //TcpClient client = (TcpClient)param[0];
 
             NetworkStream stream = Client.GetStream();
-            SslStream sslstream = new SslStream(Client.GetStream(), false);
-            sslstream.AuthenticateAsServer(Server.ServerCertificate, false, SslProtocols.Tls, false);
+            //SslStream sslstream = new SslStream(Client.GetStream(), false);
+            //sslstream.AuthenticateAsServer(Server.ServerCertificate, false, SslProtocols.Tls, false);
             // Create response handler
             ResponseHandler rsHandler = new ResponseHandler();
 
@@ -101,7 +101,7 @@ namespace WebServer.Server
             {
                 Console.WriteLine(Client.Available);
                 // Get request Object
-                string data = StreamToString(sslstream, Client.Available);
+                string data = StreamToString(stream, Client.Available);
 
                 // Check if request is valid
                 //if (IsRequestValid(request))
@@ -111,7 +111,7 @@ namespace WebServer.Server
                     string body = GetRequestBodyString(data.Split(new string[] { Environment.NewLine }, StringSplitOptions.None));
 
                     Console.WriteLine("Body: " + body);
-                    if (!CheckIfBodyAndAdd(request, body, sslstream))
+                    if (!CheckIfBodyAndAdd(request, body))
                     {
                         // Handle timeout response
                         rsHandler.HandleTimeout(Client);
@@ -178,7 +178,7 @@ namespace WebServer.Server
             return bodyContent;
         }
 
-        private bool CheckIfBodyAndAdd(WebServer.Server.Request request, string body, SslStream sslStream)
+        private bool CheckIfBodyAndAdd(WebServer.Server.Request request, string body)
         {
             Console.WriteLine("Before body check");
             bool timeout = false;
@@ -189,7 +189,7 @@ namespace WebServer.Server
                 while (!Client.GetStream().DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS || !Client.Connected) { timeout = true; break; } }
 
                 Console.WriteLine("Before read body");
-                body = StreamToString(sslStream, Client.Available);
+                body = StreamToString(Client.GetStream(), Client.Available);
             }
 
             request.Body = body;
