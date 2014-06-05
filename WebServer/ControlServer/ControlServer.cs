@@ -20,16 +20,5 @@ namespace WebServer.ControlServer
             CreateListener(IPAddress.Any, ServerConfig.ControlPort);
             Console.WriteLine("Controlserver has started on port {0}.{1}Waiting for a connection...", ServerConfig.ControlPort, Environment.NewLine);
         }
-
-        public override void Stop()
-        {
-            this.tcpListener.Stop();
-        }
-
-        public override void Restart()
-        {
-            Stop();
-            Start();
-        }
     }
 }

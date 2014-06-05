@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-	<general>
-		<name>WebServer</name>
-	</general>
-	<server>
-		<port>8080</port>
-		<webroot>webroot\www</webroot>
-		<default-page>index.html;index.htm</default-page>
-		<dir-browsing>false</dir-browsing>
-	</server>
-	<controlserver>
-		<port>8081</port>
-		<root>controlroot\www</root>
-	</controlserver>
+  <general>
+    <name>WebServer</name>
+  </general>
+  <server>
+    <port>8080</port>
+    <webroot>webroot/www</webroot>
+    <default-page>index.html;index.htm</default-page>
+    <dir-browsing>false</dir-browsing>
+  </server>
+  <controlserver>
+    <port>8086</port>
+    <root>controlroot\www</root>
+  </controlserver>
 </config>

@@ -9,18 +9,27 @@ namespace WebServer
 {
     class Program
     {
+        private static Server.Server server;
+        private static ControlServer.ControlServer cServer;
+
         static void Main(string[] args)
         {
             ServerConfig.Init();
 
-            Server.Server server = new Server.Server(ServerConfig.Webroot);
-            ControlServer.ControlServer cServer = new ControlServer.ControlServer(ServerConfig.Controlroot);
+            server = new Server.Server(ServerConfig.Webroot);
+            cServer = new ControlServer.ControlServer(ServerConfig.Controlroot);
 
             server.Start();
             cServer.Start();
 
 
             Console.Read();
+        }
+
+        public static void RestartServers()
+        {
+            server.Restart();
+            cServer.Restart();
         }
     }
 }

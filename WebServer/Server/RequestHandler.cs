@@ -7,6 +7,8 @@ using System.Net.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
+using System.Security.Authentication;
 
 namespace WebServer.Server
 {
@@ -79,8 +81,8 @@ namespace WebServer.Server
             //TcpClient client = (TcpClient)param[0];
 
             NetworkStream stream = Client.GetStream();
-            //SslStream stream = new SslStream(Client.GetStream(), false);
-
+            SslStream sslstream = new SslStream(Client.GetStream(), false);
+            sslstream.AuthenticateAsServer(Server.ServerCertificate, false, SslProtocols.Tls, false);
             // Create response handler
             ResponseHandler rsHandler = new ResponseHandler();
 
@@ -99,7 +101,7 @@ namespace WebServer.Server
             {
                 Console.WriteLine(Client.Available);
                 // Get request Object
-                string data = StreamToString(stream, Client.Available);
+                string data = StreamToString(sslstream, Client.Available);
 
                 // Check if request is valid
                 //if (IsRequestValid(request))
@@ -109,7 +111,7 @@ namespace WebServer.Server
                     string body = GetRequestBodyString(data.Split(new string[] { Environment.NewLine }, StringSplitOptions.None));
 
                     Console.WriteLine("Body: " + body);
-                    if (!CheckIfBodyAndAdd(request, body))
+                    if (!CheckIfBodyAndAdd(request, body, sslstream))
                     {
                         // Handle timeout response
                         rsHandler.HandleTimeout(Client);
@@ -176,7 +178,7 @@ namespace WebServer.Server
             return bodyContent;
         }
 
-        private bool CheckIfBodyAndAdd(WebServer.Server.Request request, string body)
+        private bool CheckIfBodyAndAdd(WebServer.Server.Request request, string body, SslStream sslStream)
         {
             Console.WriteLine("Before body check");
             bool timeout = false;
@@ -187,7 +189,7 @@ namespace WebServer.Server
                 while (!Client.GetStream().DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS || !Client.Connected) { timeout = true; break; } }
 
                 Console.WriteLine("Before read body");
-                body = StreamToString(Client.GetStream(), Client.Available);
+                body = StreamToString(sslStream, Client.Available);
             }
 
             request.Body = body;
@@ -204,7 +206,6 @@ namespace WebServer.Server
         {
             return (request != null && (request.Method == "POST" || request.Method == "GET"));
         }
-
 
         private void ParseRequestValues(Request request)
         {
@@ -242,6 +243,7 @@ namespace WebServer.Server
         private Dictionary<string, string> ParseFormData(string formDataStr, Dictionary<string, string> values)
         {
             //Dictionary<string, string> values = ((valuesDict == null) ? new Dictionary<string, string>() : valuesDict);
+            formDataStr = HttpUtility.UrlDecode(formDataStr);
             string[] parameters = formDataStr.Split('&');
             for (int i = 0; i < parameters.Length; i++)
             {
@@ -252,6 +254,11 @@ namespace WebServer.Server
                 }
             }
             return values;
+        }
+
+        public void GenerateId()
+        {
+            Request.Id = Guid.NewGuid().ToString();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace WebServer.Server
     class RouteHandler
     {
         private Request _request;
-        public Response _response;
+        private Response _response;
 
         public RouteHandler(Request request, Response response)
         {
@@ -17,7 +17,7 @@ namespace WebServer.Server
             _response = response;
         }
 
-        public void RouteUrl()
+        public void RouteUrl(Server server)
         {
             Console.WriteLine(_request.Port);
             // Console.WriteLine("Route URL here");
@@ -34,6 +34,7 @@ namespace WebServer.Server
             }
             controller.Request = _request;
             controller.Response = _response;
+            controller.Server = server;
 
             controller.Init();
         }

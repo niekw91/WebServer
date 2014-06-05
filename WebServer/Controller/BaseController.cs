@@ -10,6 +10,7 @@ namespace WebServer.Server
     {
         public Response Response { get; set; }
         public Request Request { get; set; }
+        public Server Server { get; set; }
 
         public virtual void Init()
         {

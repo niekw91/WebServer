@@ -15,6 +15,7 @@ namespace WebServer.Server
         public int Port { get; set; }
         public Dictionary<string, string> Values { get; set; }
         public string Body { get; set; }
+        public string Id { get; set; }
         //public string HTTPVersion { get; set; }
         //public Dictionary<string, string> Headers { get { return _headers; } }
 
