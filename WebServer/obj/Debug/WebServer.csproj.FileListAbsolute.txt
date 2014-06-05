@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\WebServer.exe.config
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\WebServer.exe
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\WebServer.pdb
@@ -7,3 +8,15 @@ C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgility
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.xml
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.csprojResolveAssemblyReference.cache
+=======
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\bin\Debug\WebServer.exe.config
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\bin\Debug\WebServer.exe
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\bin\Debug\WebServer.pdb
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.csprojResolveAssemblyReference.cache
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.exe
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.pdb
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.dll
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.xml
+>>>>>>> 4d5cde9b8a9e3713c542372da1c71d3f980ee19b
+C:\Users\Remi\Documents\GitHub\WebServer\WebServer\bin\Debug\MySql.Data.dll

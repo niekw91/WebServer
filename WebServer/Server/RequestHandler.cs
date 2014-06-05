@@ -82,7 +82,10 @@ namespace WebServer.Server
             //TcpClient client = (TcpClient)param[0];
 
             NetworkStream stream = Client.GetStream();
+
             SslStream sslstream = null;
+            //SslStream sslstream = new SslStream(Client.GetStream(), false);
+            //sslstream.AuthenticateAsServer(Server.ServerCertificate, false, SslProtocols.Tls, false);
             // Create response handler
             ResponseHandler rsHandler = new ResponseHandler();
 
@@ -117,6 +120,8 @@ namespace WebServer.Server
                     Console.WriteLine("SSL IO Exception: " + ex.Message);
                     sslstream = null;
                 }
+                //string data = StreamToString(stream, Client.Available);
+
 
                 // Check if request is valid
                 //if (IsRequestValid(request))
@@ -197,7 +202,7 @@ namespace WebServer.Server
             return bodyContent;
         }
 
-        private bool CheckIfBodyAndAdd(WebServer.Server.Request request, string body, SslStream sslStream)
+        private bool CheckIfBodyAndAdd(WebServer.Server.Request request, string body, Stream sslStream)
         {
             Console.WriteLine("Before body check");
             bool timeout = false;
