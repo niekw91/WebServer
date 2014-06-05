@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Security.Authentication;
+using System.IO;
 
 namespace WebServer.Server
 {
@@ -81,14 +82,15 @@ namespace WebServer.Server
             //TcpClient client = (TcpClient)param[0];
 
             NetworkStream stream = Client.GetStream();
-            SslStream sslstream = new SslStream(Client.GetStream(), false);
-            sslstream.AuthenticateAsServer(Server.ServerCertificate, false, SslProtocols.Tls, false);
+            SslStream sslstream = null;
             // Create response handler
             ResponseHandler rsHandler = new ResponseHandler();
 
             bool timeout = false;
             // Block until data or timeout
             while (!stream.DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS || !Client.Connected) { timeout = true; break; } }
+
+            
             //byte[] data = ReadFully(stream);
             //timeout = (data == null);
 
@@ -101,12 +103,29 @@ namespace WebServer.Server
             {
                 Console.WriteLine(Client.Available);
                 // Get request Object
-                string data = StreamToString(sslstream, Client.Available);
+                byte[] bdata = StreamToByteArray(((sslstream != null) ? (System.IO.Stream)sslstream : stream), Client.Available);
+
+                // Check for secure connection
+                try
+                {
+                    Stream tmpStream = new MemoryStream(bdata);
+                    sslstream = new SslStream(tmpStream, false);
+                    sslstream.AuthenticateAsServer(Server.ServerCertificate, false, SslProtocols.Ssl3, false);
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine("SSL IO Exception: " + ex.Message);
+                    sslstream = null;
+                }
 
                 // Check if request is valid
                 //if (IsRequestValid(request))
-                if(!String.IsNullOrEmpty(data))
+                //if(!String.IsNullOrEmpty(data))
+                if(bdata != null && bdata.Length > 0)
                 {
+                    string data =Encoding.UTF8.GetString(bdata);
+                    Console.WriteLine(data);
+
                     Request request = ParseStringToRequest(data);
                     string body = GetRequestBodyString(data.Split(new string[] { Environment.NewLine }, StringSplitOptions.None));
 
@@ -147,7 +166,7 @@ namespace WebServer.Server
             return rsHandler;
         }
 
-        private string StreamToString(System.IO.Stream stream, int length)
+        private byte[] StreamToByteArray(System.IO.Stream stream, int length)
         {
             // Read content from stream and Parse to Request
             byte[] bytes = new Byte[length];
@@ -155,9 +174,9 @@ namespace WebServer.Server
             stream.Read(bytes, 0, bytes.Length);
 
             //translate bytes of request to string
-            String data = Encoding.UTF8.GetString(bytes);
-            Console.WriteLine(data);
-            return data;
+            
+            //Console.WriteLine(data);
+            return bytes;
         }
 
         private string GetRequestBodyString(string[] lines)
@@ -189,7 +208,7 @@ namespace WebServer.Server
                 while (!Client.GetStream().DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS || !Client.Connected) { timeout = true; break; } }
 
                 Console.WriteLine("Before read body");
-                body = StreamToString(sslStream, Client.Available);
+                body = Encoding.UTF8.GetString(StreamToByteArray(((sslStream != null) ? (System.IO.Stream)sslStream : Client.GetStream()), Client.Available));
             }
 
             request.Body = body;
@@ -260,5 +279,11 @@ namespace WebServer.Server
         {
             Request.Id = Guid.NewGuid().ToString();
         }
+
+        //private bool IsRequestSecureDirtyCheck()
+        //{
+        //    string data = StreamToString(Client.GetStream(), Client.Available);
+        //    return (!String.IsNullOrEmpty(data) && !data.Contains("HTTP/1.1"));
+        //}
     }
 }

@@ -35,8 +35,7 @@ namespace WebServer.Server
             // Create client dictionary
             clients = new Dictionary<string, TcpClient>();
             this.rootFolder = root;
-            // Set maximum number of threads
-            ThreadPool.SetMaxThreads(20, 20);
+            
         }
 
         public void CreateListener(IPAddress ip, int port)
