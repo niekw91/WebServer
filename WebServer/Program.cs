@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,10 +15,13 @@ namespace WebServer
         private static Server.Server server;
         private static ControlServer.ControlServer cServer;
 
-        public static Logger.Logger Logger;
+        public static Logger.Logger Logger {get; set;}
 
         static void Main(string[] args)
         {
+            // Set on process end event
+            //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+
             // Set maximum number of threads
             ThreadPool.SetMaxThreads(20, 20);
 
@@ -25,12 +29,17 @@ namespace WebServer
 
             Logger = new Logger.Logger();
 
-            server = new Server.Server(ServerConfig.Webroot);
-            cServer = new ControlServer.ControlServer(ServerConfig.Controlroot);
+            server = new Server.Server(ServerConfig.Webroot, IPAddress.Any, ServerConfig.WebPort);
+            cServer = new ControlServer.ControlServer(ServerConfig.Controlroot, IPAddress.Any, ServerConfig.ControlPort);
+
+            server.ServerName = "Webserver";
+            cServer.ServerName = "Controlserver";
 
             StartServers();
 
             Console.Read();
+
+            OnProcessExit();
         }
 
         public static void StartServers()
@@ -49,6 +58,12 @@ namespace WebServer
         {
             server.Restart();
             cServer.Restart();
+        }
+
+        public static void OnProcessExit()
+        {
+            Console.WriteLine("Closing program");
+            StopServers();
         }
     }
 }

@@ -25,9 +25,13 @@ namespace WebServer.Server
 
         private Dictionary<String, TcpClient> clients;
 
+        public string ServerName { get; set; }
+        public IPAddress IPAddress { get; set; }
+        public int Port { get; set; }
+
         //http://tech.pro/tutorial/704/csharp-tutorial-simple-threaded-tcp-server
 
-        public Server(string root)
+        public Server(string root, IPAddress ip, int port)
         {
             // Create certificate from file
             ServerCertificate = X509Certificate.CreateFromCertFile(CERTIFICATE_PATH);
@@ -35,7 +39,8 @@ namespace WebServer.Server
             // Create client dictionary
             clients = new Dictionary<string, TcpClient>();
             this.rootFolder = root;
-            
+            this.IPAddress = ip;
+            this.Port = port;
         }
 
         public void CreateListener(IPAddress ip, int port)
@@ -50,8 +55,9 @@ namespace WebServer.Server
 
         public virtual void Start()
         {
-            CreateListener(IPAddress.Any, ServerConfig.WebPort);
-            Console.WriteLine("Server has started on port {0}.{1}Waiting for a connection...", ServerConfig.WebPort, Environment.NewLine);
+            CreateListener(IPAddress, Port);
+            Console.WriteLine(ServerName + " has started on port {0}.{1}Waiting for a connection...", Port, Environment.NewLine);
+            Program.Logger.WriteMessage(String.Format("{0} has started on port {1}. Waiting for a connection...", ServerName, Port, Environment.NewLine));
         }
 
         public virtual void Stop()
@@ -67,10 +73,12 @@ namespace WebServer.Server
                 this.tcpListener.Stop();
                 break;
             }
+            Program.Logger.WriteMessage(String.Format("{0} has stopped on port {1}.", ServerName, Port));
         }
 
         public virtual void Restart()
         {
+            Program.Logger.WriteMessage(ServerName + " initiating restart.");
             Stop();
             Start();
         }
@@ -97,10 +105,13 @@ namespace WebServer.Server
 
                     // HTTPS secure connection stream
                     //SslStream stream = new SslStream(client.GetStream(), false);
-
+                    string ip = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
                     Console.WriteLine("----------------");
                     Console.WriteLine("A client connected.");
-                    Console.WriteLine("IP Address: {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
+                    Console.WriteLine("IP Address: {0}", ip);
+
+                    Program.Logger.WriteMessage(String.Format("{0}, Client connected, IP: {1}, Start at: {2}", ServerName, ip, DateTime.Now.ToString()));
+
                     //create a thread to handle communication 
                     //with connected client
                     RequestHandler rqHandler = new RequestHandler();
@@ -130,6 +141,10 @@ namespace WebServer.Server
 
             if (rqHandler.IsRequestValid(rqHandler.Request))
             {
+                Program.Logger.WriteMessage(String.Format("{0}, URL: {1}",ServerName, rqHandler.Request.FullUrl));
+
+                rqHandler.Request.IPAdress = ((IPEndPoint)rqHandler.Client.Client.RemoteEndPoint).Address.ToString();
+
                 rqHandler.GenerateId();
                 clients.Add(rqHandler.Request.Id, rqHandler.Client);
 
@@ -157,6 +172,7 @@ namespace WebServer.Server
 
             rqHandler.Client.Close();
             rqHandler.Timer.Stop();
+            Program.Logger.WriteMessage(String.Format("{0}, Connection closed, TotalTime: {1}ms", ServerName, rqHandler.Timer.ElapsedMilliseconds));
             Console.WriteLine("Total time: " + rqHandler.Timer.ElapsedMilliseconds + " ms");
             Console.WriteLine("Close connection");
             Console.WriteLine("----------------");

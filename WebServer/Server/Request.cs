@@ -16,10 +16,9 @@ namespace WebServer.Server
         public Dictionary<string, string> Values { get; set; }
         public string Body { get; set; }
         public string Id { get; set; }
-        //public string HTTPVersion { get; set; }
-        //public Dictionary<string, string> Headers { get { return _headers; } }
 
-        //private Dictionary<string, string> _headers;
+        public string IPAdress { get; set; }
+
         public Request() : base()
         {
             Values = new Dictionary<string, string>();
