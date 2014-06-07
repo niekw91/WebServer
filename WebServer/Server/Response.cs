@@ -74,6 +74,8 @@ namespace WebServer.Server
                     return "text/javascript";
                 case "css":
                     return "text/css";
+                case "txt":
+                    return "text/plain";
                 default:
                     return "text/html";
             }

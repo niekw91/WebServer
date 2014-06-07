@@ -54,7 +54,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controller\BaseController.cs" />
     <Compile Include="Controller\ControlServerController.cs" />
-    <Compile Include="Server\CustomTcpClient.cs" />
     <Compile Include="Server\Request.cs" />
     <Compile Include="Server\RequestHandler.cs" />
     <Compile Include="Server\Response.cs" />

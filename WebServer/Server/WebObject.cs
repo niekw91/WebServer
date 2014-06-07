@@ -19,7 +19,10 @@ namespace WebServer.Server
 
         public void AddHeader(string header, string value)
         {
-            _headers.Add(header, value);
+            if (!_headers.ContainsKey(header))
+                _headers.Add(header, value);
+            else
+                _headers[header] = value;
         }
 
         public string GetHeader(string header)
