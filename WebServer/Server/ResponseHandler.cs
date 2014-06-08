@@ -81,7 +81,7 @@ namespace WebServer.Server
             if (!ParseValidUrl(request.Url))
             {
                 request.Url = FixUrl(request.Url);
-                request.Url = request.Url + GetDefaultPage(request);
+                request.Url = request.Url + GetDefaultPage(request, root);
             }
 
             response.Path = root + request.Url;
@@ -131,12 +131,12 @@ namespace WebServer.Server
             return url;
         }
 
-        private string GetDefaultPage(Request request)
+        private string GetDefaultPage(Request request, string root)
         {
             string[] defaultPages = ServerConfig.DefaultPage.Split(';');
             foreach (string defPage in defaultPages)
             {
-                if (File.Exists(ServerConfig.Webroot + request.Url + defPage))
+                if (File.Exists(root + request.Url + defPage))
                     return defPage;
             }
             return null;

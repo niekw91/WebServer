@@ -92,6 +92,8 @@ namespace WebServer.Server
                 //blocks until a client has connected to the server
                 try
                 {
+                    // Error op server restart,
+                    // Note, bij restart gaan beide servers waarschijnlijk op zelfde thread restarten
                     TcpClient client = this.tcpListener.AcceptTcpClient();
                     //CustomTcpClient custom = new CustomTcpClient();
                     //custom.Client = client;

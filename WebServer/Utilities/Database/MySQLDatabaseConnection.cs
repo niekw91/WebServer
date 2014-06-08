@@ -64,5 +64,22 @@ namespace WebServer.Utilities.Database
 
             return success;
         }
+
+        public static MySqlDataReader GetUsers()
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand("SELECT * FROM user;", conn);
+
+                    return cmd.ExecuteReader();
+                    //reader.Close();
+                }
+            }
+            catch (MySqlException ex) { Console.WriteLine(ex.Message); }
+            return null;
+        }
     }
 }
