@@ -56,6 +56,9 @@ namespace WebServer
 
         public static void RestartServers()
         {
+            server.Port = ServerConfig.WebPort;
+            cServer.Port = ServerConfig.ControlPort;
+
             server.Restart();
             cServer.Restart();
         }

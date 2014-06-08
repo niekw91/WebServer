@@ -18,8 +18,14 @@ namespace WebServer.Server
                 case "/configuration.html":
                     if (Request.Method == "GET")
                         GetConfiguration();
-                    else if (Request.Method == "POST")
-                        PostConfiguration();
+                    else if (Request.Method == "POST") {
+                        Console.WriteLine("Referer: " + Request.GetHeader("referer"));
+                        // Dirty check of de post niet van ergens anders komt
+                        if (!String.IsNullOrEmpty(Request.GetHeader("referer")) && !Request.GetHeader("referer").Contains("configuration.html"))
+                            GetConfiguration();
+                        else
+                            PostConfiguration();
+                    }
                     break;
                 case "/index.html":
                     if (Request.Method == "POST")
@@ -33,6 +39,7 @@ namespace WebServer.Server
             HTMLParser parser = new HTMLParser();
             string content = parser.ParseHTMLConfig(Response.Path);
             Response.Content = Encoding.UTF8.GetBytes(content);
+            Response.AddHeader("Content-Length", Response.Content.Length.ToString());
         }
 
         private void PostConfiguration()
@@ -68,8 +75,19 @@ namespace WebServer.Server
                     bool loggedIn = Authentication.Login(username, password);
                     if (loggedIn)
                     {
-                        //Response.Path = @"controlroot\www\configuration.html";
+                        Console.WriteLine("Success login");
+                        Response.Path = ServerConfig.Controlroot+ @"\configuration.html";
+                        GetConfiguration();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed login");
+                        //Response.Path = ServerConfig.Controlroot+@"\configuration.html";
                         //GetConfiguration();
+                        Response.StatusCode = 307;
+                        Response.StatusMessage = "Redirect";
+                        Response.AddHeader("Location", "configuration.html");
+                        //Response.AddHeader("X-Hello", "Hello");
                     }
                         
                 }
