@@ -56,5 +56,65 @@ namespace WebServer.Utilities.HTML
             }
             return result;
         }
+
+        public string ParseUserTableHTML(string path)
+        {
+            MySql.Data.MySqlClient.MySqlDataReader reader = Database.MySQLDatabaseConnection.GetUsers();
+
+            var doc = new HtmlDocument();
+            doc.Load(path);
+
+            foreach (HtmlNode table in doc.DocumentNode.SelectNodes("//table[@id='user-table']"))
+            {
+                StringBuilder rows = new StringBuilder("<thead><tr><th>Username</th></tr></thead>");
+                rows.Append("<tbody>");
+                if (reader != null)
+                {
+                    while (reader.Read())
+                    {
+                        rows.Append("<tr>");
+                        rows.Append("<td>" + reader["username"] + "</td>");
+                        rows.Append("<td><a href='/user/edit.html?id=" + reader["id"] + "'></a><a href='/user/delete.html?id=" + reader["id"] + "'></a></td>");
+                        rows.Append("</tr>");
+                    }
+                }
+                rows.Append("</tbody>");
+                table.InnerHtml = rows.ToString();
+            }
+            string result = null;
+            using (StringWriter writer = new StringWriter())
+            {
+                doc.Save(writer);
+                result = writer.ToString();
+                writer.Flush();
+            }
+            return result;
+        }
+
+        public string ParseEditUserHTML(string path, int id)
+        {
+            MySql.Data.MySqlClient.MySqlDataReader reader = Database.MySQLDatabaseConnection.GetUser(id);
+
+            var doc = new HtmlDocument();
+            doc.Load(path);
+
+            foreach (HtmlNode form in doc.DocumentNode.SelectNodes("//form"))
+            {
+                foreach (HtmlNode input in form.SelectNodes("input"))
+                {
+
+                }
+            }
+
+            
+            string result = null;
+            using (StringWriter writer = new StringWriter())
+            {
+                doc.Save(writer);
+                result = writer.ToString();
+                writer.Flush();
+            }
+            return result;
+        }
     }
 }

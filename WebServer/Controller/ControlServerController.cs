@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebServer.Utilities.Authentication;
 using WebServer.Utilities.HTML;
+using WebServer.Utilities.User;
 
 namespace WebServer.Server
 {
@@ -30,6 +31,21 @@ namespace WebServer.Server
                 case "/index.html":
                     if (Request.Method == "POST")
                         Login();
+                    break;
+                case "/user/index.html":
+                    GetUserTable();
+                    break;
+                case "/user/add.html":
+                    if (Request.Method == "POST")
+                    {
+                        AddUser();
+                    }
+                    break;
+                case "/user/edit.html":
+                    if (Request.Method == "GET")
+                        GetEditUser();
+                    else if (Request.Method == "POST")
+                        PostEditUser();
                     break;
             }
         }
@@ -93,6 +109,66 @@ namespace WebServer.Server
                 }
             }
             catch (KeyNotFoundException) { }
+        }
+
+        private void GetUserTable()
+        {
+            HTMLParser parser = new HTMLParser();
+            string content = parser.ParseUserTableHTML(Response.Path);
+            if (content != null)
+            {
+                Response.Content = Encoding.UTF8.GetBytes(content);
+                Response.AddHeader("Content-Length", Response.Content.Length.ToString());
+            }
+        }
+
+        private void AddUser()
+        {
+            if (Request.Values.Count > 0)
+            {
+                string username = Request.Values["username"];
+                string password = Request.Values["password"];
+
+                if (!String.IsNullOrEmpty(username) && !String.IsNullOrEmpty(password))
+                {
+                    User.Add(username, password);
+
+                    Response.StatusCode = 307;
+                    Response.StatusMessage = "Redirect";
+                    Response.AddHeader("Location", "/user/index.html");
+                }
+            }
+        }
+
+        private void PostEditUser()
+        {
+            if (Request.Values.Count > 0)
+            {
+                int id = Convert.ToInt32(Request.Values["id"]);
+                string username = Request.Values["username"];
+                string password = Request.Values["password"];
+
+                if (!String.IsNullOrEmpty(username) && !String.IsNullOrEmpty(password))
+                {
+                    User.Edit(id, username, password);
+
+                    Response.StatusCode = 307;
+                    Response.StatusMessage = "Redirect";
+                    Response.AddHeader("Location", "/user/index.html");
+                }
+            }
+        }
+
+        private void GetEditUser()
+        {
+            HTMLParser parser = new HTMLParser();
+            Response.Path = Response.Path.Replace("add", "edit");
+            string content = parser.ParseEditUserHTML(Response.Path, 0);
+            if (content != null)
+            {
+                Response.Content = Encoding.UTF8.GetBytes(content);
+                Response.AddHeader("Content-Length", Response.Content.Length.ToString());
+            }
         }
     }
 }

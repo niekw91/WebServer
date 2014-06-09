@@ -81,5 +81,64 @@ namespace WebServer.Utilities.Database
             catch (MySqlException ex) { Console.WriteLine(ex.Message); }
             return null;
         }
+
+        public static MySqlDataReader GetUser(int id)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand("SELECT * FROM user WHERE id=@id;", conn);
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    return cmd.ExecuteReader();
+                    //reader.Close();
+                }
+            }
+            catch (MySqlException ex) { Console.WriteLine(ex.Message); }
+            return null;
+        }
+
+        public static void AddUser(string username, string password, string salt)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand("INSERT INTO user (username, password, salt) VALUES(@username, @password, @salt)", conn);
+
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@password", password);
+                    cmd.Parameters.AddWithValue("@salt", salt);
+
+                    cmd.ExecuteReader();
+                    //reader.Close();
+                }
+            }
+            catch (MySqlException ex) { Console.WriteLine(ex.Message); }
+        }
+
+        public static void EditUser()
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
+                {
+                    conn.Open();
+                    // Update query
+                    MySqlCommand cmd = new MySqlCommand("INSERT INTO user (username, password, salt) VALUES(@username, @password, @salt)", conn);
+
+                    //cmd.Parameters.AddWithValue("@username", username);
+                    //cmd.Parameters.AddWithValue("@password", password);
+
+                    cmd.ExecuteReader();
+                    //reader.Close();
+                }
+            }
+            catch (MySqlException ex) { Console.WriteLine(ex.Message); }
+        }
     }
 }

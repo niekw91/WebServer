@@ -69,6 +69,7 @@
     <Compile Include="Utilities\Interfaces\IDatabaseConnection.cs" />
     <Compile Include="Utilities\Interfaces\IReader.cs" />
     <Compile Include="Utilities\Interfaces\IWriter.cs" />
+    <Compile Include="Utilities\User\User.cs" />
     <Compile Include="Utilities\XML\XMLReader.cs" />
     <Compile Include="Utilities\XML\XMLWriter.cs" />
   </ItemGroup>
