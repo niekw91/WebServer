@@ -13,18 +13,24 @@ namespace WebServer.Server
         public override void Init()
         {
             Console.WriteLine(Request.Url);
+            string token = Request.GetHeader("cookie");
+            if (token != null) token = token.Split('=')[1];
             switch (Request.Url)
             {
                 case "/configuration.html":
-                    if (Request.Method == "GET")
-                        GetConfiguration();
-                    else if (Request.Method == "POST") {
-                        Console.WriteLine("Referer: " + Request.GetHeader("referer"));
-                        // Dirty check of de post niet van ergens anders komt
-                        if (!String.IsNullOrEmpty(Request.GetHeader("referer")) && !Request.GetHeader("referer").Contains("configuration.html"))
+                    if (Authentication.IsTokenValid(token))
+                    {
+                        if (Request.Method == "GET")
                             GetConfiguration();
-                        else
-                            PostConfiguration();
+                        else if (Request.Method == "POST")
+                        {
+                            Console.WriteLine("Referer: " + Request.GetHeader("referer"));
+                            // Dirty check of de post niet van ergens anders komt
+                            if (!String.IsNullOrEmpty(Request.GetHeader("referer")) && !Request.GetHeader("referer").Contains("configuration.html"))
+                                GetConfiguration();
+                            else
+                                PostConfiguration();
+                        }
                     }
                     break;
                 case "/index.html":
@@ -72,11 +78,14 @@ namespace WebServer.Server
                     String username = Request.Values["username"];
                     String password = Request.Values["password"];
                     // Check if login is valid
-                    bool loggedIn = Authentication.Login(username, password);
-                    if (loggedIn)
+                    string token = Authentication.Login(username, password);
+                    if (token != null)
                     {
                         Console.WriteLine("Success login");
                         Response.Path = ServerConfig.Controlroot+ @"\configuration.html";
+
+                        Response.AddHeader("Set-Cookie", String.Format("UserID={0}; Max-Age=3600; Version=1", token));
+
                         GetConfiguration();
                     }
                     else
