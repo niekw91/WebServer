@@ -10,7 +10,7 @@
     <dir-browsing>false</dir-browsing>
   </server>
   <controlserver>
-    <port>8086</port>
+    <port>8084</port>
     <root>controlroot\www</root>
   </controlserver>
 </config>

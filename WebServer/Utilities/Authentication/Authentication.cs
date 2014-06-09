@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Security;
 using WebServer.Utilities.Database;
 
@@ -11,16 +12,21 @@ namespace WebServer.Utilities.Authentication
 {
     class Authentication
     {
-        public static bool Login(string username, string password)
+        public static string Login(string username, string password)
         {
             string salt = MySQLDatabaseConnection.GetUserSalt(username);
             if (salt != null)
             {
                 string hash = HashPasswordWithSalt(password, Encoding.UTF8.GetBytes(salt));
-
-                return MySQLDatabaseConnection.GetLoginCredentials(username, hash);
+                Dictionary<String, String> credentials = MySQLDatabaseConnection.GetLoginCredentials(username, hash);
+                if (credentials["password"] == hash)
+                {
+                    string token = GenerateToken();
+                    MySQLDatabaseConnection.SetUserToken(token, credentials["id"].ToString());
+                    return token;
+                }
             }
-            return false;
+            return null;
         }
 
         public static string CreateSalt(int size)
@@ -46,6 +52,24 @@ namespace WebServer.Utilities.Authentication
             byte[] hash = hashAlgo.ComputeHash(combinedBytes);
 
             return Convert.ToBase64String(hash);
+        }
+
+        public static string GenerateToken()
+        {
+            byte[] time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
+            byte[] key = Guid.NewGuid().ToByteArray();
+            return Convert.ToBase64String(time.Concat(key).ToArray());
+        }
+
+        public static bool IsTokenValid(string token)
+        {
+            byte[] data = Convert.FromBase64String(token);
+            DateTime when = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
+            if (when < DateTime.UtcNow.AddHours(-24))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace WebServer.Utilities.Database
 {
     class MySQLDatabaseConnection : IDatabaseConnection
     {
-        private static readonly string CONNECTION_STRING = "Server=127.0.0.1;Database=webserver;Uid=root;Pwd=;";
+        private static readonly string CONNECTION_STRING = "Server=databases.aii.avans.nl;Database=nwmwille_db;Uid=nwmwille;Pwd=Z3v3nti3n;";
 
         public static string GetUserSalt(string username)
         {
@@ -37,10 +37,9 @@ namespace WebServer.Utilities.Database
             return salt;
         }
 
-        public static bool GetLoginCredentials(string username, string password)
+        public static Dictionary<String, String> GetLoginCredentials(string username, string password)
         {
-            bool success = false;
-
+            Dictionary<String, String> credentials = new Dictionary<String, String>();
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
@@ -54,15 +53,19 @@ namespace WebServer.Utilities.Database
                     MySqlDataReader reader = cmd.ExecuteReader();
                     if (reader.Read()) 
                     {
-                        if (reader["password"].ToString() == password)
-                            success = true;
+                        credentials.Add("id", reader["id"].ToString());
+                        credentials.Add("username", reader["username"].ToString());
+                        credentials.Add("password", reader["password"].ToString());
+                        credentials.Add("salt", reader["salt"].ToString());
+                        credentials.Add("role_id", reader["role_id"].ToString());
+                        credentials.Add("token", reader["token"].ToString());
                     }
                     reader.Close();
                 }
             }
             catch (MySqlException ex) { Console.WriteLine(ex.Message); }
 
-            return success;
+            return credentials;
         }
 
         public static MySqlDataReader GetUsers()
@@ -82,6 +85,7 @@ namespace WebServer.Utilities.Database
             return null;
         }
 
+
         public static MySqlDataReader GetUser(int id)
         {
             try
@@ -89,6 +93,7 @@ namespace WebServer.Utilities.Database
                 using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
                 {
                     conn.Open();
+
                     MySqlCommand cmd = new MySqlCommand("SELECT * FROM user WHERE id=@id;", conn);
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -99,6 +104,24 @@ namespace WebServer.Utilities.Database
             }
             catch (MySqlException ex) { Console.WriteLine(ex.Message); }
             return null;
+        }
+
+        public static void SetUserToken(string token, string id)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand("UPDATE user SET token=@token WHERE id=@id", conn);
+
+                    cmd.Parameters.AddWithValue("@token", token);
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (MySqlException ex) { Console.WriteLine(ex.Message); }
         }
 
         public static void AddUser(string username, string password, string salt)
