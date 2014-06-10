@@ -10,7 +10,7 @@ namespace WebServer.Utilities.Database
 {
     class MySQLDatabaseConnection : IDatabaseConnection
     {
-        private static readonly string CONNECTION_STRING = "Server=databases.aii.avans.nl;Database=nwmwille_db;Uid=nwmwille;Pwd=Z3v3nti3n;";
+        private static readonly string CONNECTION_STRING = "Server=;Database=;Uid=;Pwd=;";
 
         public static string GetUserSalt(string username)
         {
