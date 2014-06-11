@@ -96,15 +96,22 @@ namespace WebServer.Utilities.Database
             return null;
         }
 
+<<<<<<< HEAD
 
         public static Dictionary<String, String> GetUser(string token)
         {
             Dictionary<String, String> credentials = null;
+=======
+
+        public static MySqlDataReader GetUser(int id)
+        {
+>>>>>>> origin/master
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
                 {
                     conn.Open();
+<<<<<<< HEAD
 
                     MySqlCommand cmd = new MySqlCommand("SELECT * FROM user WHERE token=@token;", conn);
 
@@ -125,6 +132,8 @@ namespace WebServer.Utilities.Database
                 using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
                 {
                     conn.Open();
+=======
+>>>>>>> origin/master
 
                     MySqlCommand cmd = new MySqlCommand("SELECT * FROM user WHERE id=@id;", conn);
 
@@ -136,9 +145,15 @@ namespace WebServer.Utilities.Database
             }
             catch (MySqlException ex) { Console.WriteLine(ex.Message); }
             return null;
+<<<<<<< HEAD
         }
 
         public static void SetUserToken(string token, string id)
+=======
+        }
+
+        public static void SetUserToken(string token, string id)
+>>>>>>> origin/master
         {
             try
             {
