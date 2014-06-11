@@ -22,8 +22,6 @@ namespace WebServer.Utilities.Authentication
                 Dictionary<String, String> credentials = MySQLDatabaseConnection.GetLoginCredentials(username, hash);
                 if (credentials["password"] == hash)
                 {
-                    // Save current user object
-                    server.CurrentUser = credentials;
                     // Generate token
                     string token = GenerateToken();
                     MySQLDatabaseConnection.SetUserToken(token, credentials["id"].ToString());
@@ -87,5 +85,17 @@ namespace WebServer.Utilities.Authentication
             return roles;
         }
 
+        public static bool IsCurrentUserAdmin(string token, Dictionary<String, int> roles)
+        {
+            if (token != null)
+            {
+                Dictionary<String, String> credentials = MySQLDatabaseConnection.GetUser(token);
+                if (credentials["role_id"] == roles["Administrator"].ToString())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

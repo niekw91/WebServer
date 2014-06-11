@@ -11,12 +11,18 @@ namespace WebServer.Server
 {
     class ControlServerController : BaseController
     {
+        private bool isAdmin = false;
+
         public override void Init()
         {
             Console.WriteLine(Request.Url);
             // Get cookie with token from header
             string token = Request.GetHeader("cookie");
-            if (token != null) token = token.Split('=')[1];
+            if (token != null)
+            {
+                token = token.Split('=')[1];
+                isAdmin = Authentication.IsCurrentUserAdmin(token, Server.Roles);
+            }
 
             switch (Request.Url)
             {
@@ -60,8 +66,6 @@ namespace WebServer.Server
 
         private void GetConfiguration()
         {
-            bool isAdmin = false;
-            if (Server.CurrentUser["role_id"] == Server.Roles["Administrator"].ToString()) isAdmin = true;
             HTMLParser parser = new HTMLParser();
             string content = parser.ParseHTMLConfig(Response.Path, isAdmin);
             Response.Content = Encoding.UTF8.GetBytes(content);
@@ -78,8 +82,9 @@ namespace WebServer.Server
                     String controlPort = Request.Values["control-port"];
                     String webRoot = Request.Values["webroot"];
                     String defaultPage = Request.Values["default-page"];
+                    String dirBrowsing = Request.Values["dir-browsing"];
                     // Write config file
-                    ServerConfig.WriteConfig(webPort, controlPort, webRoot, defaultPage);
+                    ServerConfig.WriteConfig(webPort, controlPort, webRoot, defaultPage, dirBrowsing);
                     // Restart server
                     Server.RestartId = Request.Id;
                     // Set response
@@ -106,16 +111,19 @@ namespace WebServer.Server
                         
                         Response.AddHeader("Set-Cookie", String.Format("UserID={0}; Max-Age=3600; Version=1", token));
 
-                        GetConfiguration();
+                        //GetConfiguration();
+                        Response.StatusCode = 307;
+                        Response.StatusMessage = "Redirect";
+                        Response.AddHeader("Location", "configuration.html");
                     }
                     else
                     {
                         Console.WriteLine("Failed login");
                         //Response.Path = ServerConfig.Controlroot+@"\configuration.html";
                         //GetConfiguration();
-                        Response.StatusCode = 307;
-                        Response.StatusMessage = "Redirect";
-                        Response.AddHeader("Location", "configuration.html");
+                        //Response.StatusCode = 307;
+                        //Response.StatusMessage = "Redirect";
+                        //Response.AddHeader("Location", "configuration.html");
                         //Response.AddHeader("X-Hello", "Hello");
                     }
                         

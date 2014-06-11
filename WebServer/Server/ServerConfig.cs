@@ -100,7 +100,7 @@ namespace WebServer.Server
             Controlroot = controlroot;
         }
 
-        internal static void WriteConfig(string webPort, string controlPort, string webRoot, string defaultPage)
+        internal static void WriteConfig(string webPort, string controlPort, string webRoot, string defaultPage, string dirBrowsing)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load(CONFIG_PATH);
@@ -114,6 +114,8 @@ namespace WebServer.Server
             webRootNode.InnerText = webRoot;
             XmlNode defaultPageNode = server.SelectSingleNode("default-page");
             defaultPageNode.InnerText = defaultPage;
+            XmlNode dirBrowsingNode = server.SelectSingleNode("dir-browsing");
+            dirBrowsingNode.InnerText = dirBrowsing;
             XmlNode controlServer = element.SelectSingleNode("controlserver");
             XmlNode controlPortNode = controlServer.SelectSingleNode("port");
             controlPortNode.InnerText = controlPort;

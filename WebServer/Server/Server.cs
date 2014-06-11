@@ -17,7 +17,7 @@ namespace WebServer.Server
         private static readonly String CERTIFICATE_PATH = @"config\server.pfx";
         public static X509Certificate ServerCertificate { get; set; }
         public static Dictionary<String, int> Roles { get; set; }
-        public Dictionary<String, String> CurrentUser { get; set; }
+        //public Dictionary<String, String> CurrentUser { get; set; }
 
         protected TcpListener tcpListener;
         protected Thread listenThread;
@@ -129,7 +129,7 @@ namespace WebServer.Server
                     //object[] parameters = new object[2] { client, rootFolder };
                     ThreadPool.QueueUserWorkItem(DoRequest, rqHandler);
                 }
-                catch (SocketException se) { Console.WriteLine(se.Message); }
+                catch (Exception se) { Console.WriteLine(se.Message); }
             }
         }
 

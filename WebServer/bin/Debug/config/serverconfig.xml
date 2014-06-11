@@ -4,10 +4,10 @@
     <name>WebServer</name>
   </general>
   <server>
-    <port>8080</port>
+    <port>8081</port>
     <webroot>webroot/www</webroot>
     <default-page>index.html;index.htm</default-page>
-    <dir-browsing>false</dir-browsing>
+    <dir-browsing>True</dir-browsing>
   </server>
   <controlserver>
     <port>8084</port>

@@ -42,12 +42,20 @@ namespace WebServer.Utilities.HTML
                                 input.Attributes["value"].Value = ServerConfig.DefaultPage.ToString();
                                 break;
                             case "dir-browsing":
+                                //input.Attributes["value"].Value = ServerConfig.DirectoryBrowsing;
                                 break;
                             default:
                                 break;
                         }
                     }
                 }
+            }
+            if (!isAdmin)
+            {
+                HtmlNode userLink = doc.DocumentNode.SelectSingleNode("//a[@id='user-link']");
+                userLink.Remove();
+                HtmlNode submitButton = doc.DocumentNode.SelectSingleNode("//input[@id='submit-button']");
+                submitButton.Remove();
             }
             string result = null;
             using (StringWriter writer = new StringWriter())
