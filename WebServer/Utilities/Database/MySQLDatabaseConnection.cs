@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace WebServer.Utilities.Database
 {
     class MySQLDatabaseConnection : IDatabaseConnection
     {
-        private static readonly string CONNECTION_STRING = "Server=;Database=;Uid=;Pwd=;";
+        private static readonly string CONNECTION_STRING = "Server=databases.aii.avans.nl;Database=;Uid=;Pwd=;";
 
         public static string GetUserSalt(string username)
         {
@@ -68,8 +69,9 @@ namespace WebServer.Utilities.Database
             return credentials;
         }
 
-        public static MySqlDataReader GetUsers()
+        public static IDataReader GetUsers()
         {
+            MySqlDataReader reader;
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
@@ -77,8 +79,10 @@ namespace WebServer.Utilities.Database
                     conn.Open();
                     MySqlCommand cmd = new MySqlCommand("SELECT * FROM user;", conn);
 
-                    return cmd.ExecuteReader();
-                    //reader.Close();
+                    reader = cmd.ExecuteReader();
+                    var dt = new DataTable();
+                    dt.Load(reader);
+                    return dt.CreateDataReader();
                 }
             }
             catch (MySqlException ex) { Console.WriteLine(ex.Message); }
@@ -162,6 +166,25 @@ namespace WebServer.Utilities.Database
                 }
             }
             catch (MySqlException ex) { Console.WriteLine(ex.Message); }
+        }
+
+        public static DataTable GetRoles()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
+                {
+                    conn.Open();
+
+                    MySqlCommand cmd = new MySqlCommand("SELECT * FROM role;", conn);
+
+                    dt.Load(cmd.ExecuteReader());
+                }
+            }
+            catch (MySqlException ex) { Console.WriteLine(ex.Message); }
+
+            return dt;
         }
     }
 }

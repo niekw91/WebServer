@@ -14,12 +14,14 @@ namespace WebServer.Server
         public override void Init()
         {
             Console.WriteLine(Request.Url);
+            // Get cookie with token from header
             string token = Request.GetHeader("cookie");
             if (token != null) token = token.Split('=')[1];
+
             switch (Request.Url)
             {
                 case "/configuration.html":
-                    if (Authentication.IsTokenValid(token))
+                    if (token != null && Authentication.IsTokenValid(token))
                     {
                         if (Request.Method == "GET")
                             GetConfiguration();
@@ -58,8 +60,10 @@ namespace WebServer.Server
 
         private void GetConfiguration()
         {
+            bool isAdmin = false;
+            if (Server.CurrentUser["role_id"] == Server.Roles["Administrator"].ToString()) isAdmin = true;
             HTMLParser parser = new HTMLParser();
-            string content = parser.ParseHTMLConfig(Response.Path);
+            string content = parser.ParseHTMLConfig(Response.Path, isAdmin);
             Response.Content = Encoding.UTF8.GetBytes(content);
             Response.AddHeader("Content-Length", Response.Content.Length.ToString());
         }
@@ -94,12 +98,12 @@ namespace WebServer.Server
                     String username = Request.Values["username"];
                     String password = Request.Values["password"];
                     // Check if login is valid
-                    string token = Authentication.Login(username, password);
+                    string token = Authentication.Login(username, password, Server);
                     if (token != null)
                     {
                         Console.WriteLine("Success login");
                         Response.Path = ServerConfig.Controlroot+ @"\configuration.html";
-
+                        
                         Response.AddHeader("Set-Cookie", String.Format("UserID={0}; Max-Age=3600; Version=1", token));
 
                         GetConfiguration();

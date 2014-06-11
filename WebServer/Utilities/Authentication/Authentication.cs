@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,7 +13,7 @@ namespace WebServer.Utilities.Authentication
 {
     class Authentication
     {
-        public static string Login(string username, string password)
+        public static string Login(string username, string password, Server.Server server)
         {
             string salt = MySQLDatabaseConnection.GetUserSalt(username);
             if (salt != null)
@@ -21,6 +22,9 @@ namespace WebServer.Utilities.Authentication
                 Dictionary<String, String> credentials = MySQLDatabaseConnection.GetLoginCredentials(username, hash);
                 if (credentials["password"] == hash)
                 {
+                    // Save current user object
+                    server.CurrentUser = credentials;
+                    // Generate token
                     string token = GenerateToken();
                     MySQLDatabaseConnection.SetUserToken(token, credentials["id"].ToString());
                     return token;
@@ -71,5 +75,17 @@ namespace WebServer.Utilities.Authentication
             }
             return true;
         }
+
+        public static Dictionary<String, int> GetRoles()
+        {
+            DataTable dt = MySQLDatabaseConnection.GetRoles();
+            Dictionary<String, int> roles = new Dictionary<string, int>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                roles.Add(dt.Rows[i]["role"].ToString(), (int)dt.Rows[i]["id"]);
+            }
+            return roles;
+        }
+
     }
 }

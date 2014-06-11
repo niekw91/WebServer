@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebServer.Utilities.Interfaces;
 
 namespace WebServer.Utilities.User
 {
     class User
     {
 
-        public static MySql.Data.MySqlClient.MySqlDataReader GetAll()
+        public static IDataReader GetAll()
         {
             return Database.MySQLDatabaseConnection.GetUsers();
         }

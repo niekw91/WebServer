@@ -8,13 +8,16 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WebServer.Utilities.Authentication;
 
 namespace WebServer.Server
 {
     class Server
     {
-        private static readonly String CERTIFICATE_PATH = @"config\webserver.cer";
+        private static readonly String CERTIFICATE_PATH = @"config\server.pfx";
         public static X509Certificate ServerCertificate { get; set; }
+        public static Dictionary<String, int> Roles { get; set; }
+        public Dictionary<String, String> CurrentUser { get; set; }
 
         protected TcpListener tcpListener;
         protected Thread listenThread;
@@ -33,7 +36,10 @@ namespace WebServer.Server
 
         public Server(string root, IPAddress ip, int port)
         {
+            // Get user roles from database
+            Roles = Authentication.GetRoles();
             // Create certificate from file
+            //ServerCertificate = new X509Certificate2(CERTIFICATE_PATH, "");
             ServerCertificate = X509Certificate.CreateFromCertFile(CERTIFICATE_PATH);
             RestartId = "";
             // Create client dictionary

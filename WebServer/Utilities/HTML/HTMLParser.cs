@@ -11,7 +11,7 @@ namespace WebServer.Utilities.HTML
 {
     class HTMLParser
     {
-        public string ParseHTMLConfig(String path)
+        public string ParseHTMLConfig(String path, bool isAdmin)
         {
             // Load specified HTML document
             var doc = new HtmlDocument();
@@ -25,6 +25,8 @@ namespace WebServer.Utilities.HTML
                     {
                         // Select input field
                         HtmlNode input = cell.SelectSingleNode("input");
+                        // If user is administrator, enable all fields
+                        if (isAdmin && input != null && input.Attributes["disabled"] != null) input.Attributes["disabled"].Remove();
                         switch (cell.Id)
                         {
                             case "web-port":
@@ -59,7 +61,7 @@ namespace WebServer.Utilities.HTML
 
         public string ParseUserTableHTML(string path)
         {
-            MySql.Data.MySqlClient.MySqlDataReader reader = Database.MySQLDatabaseConnection.GetUsers();
+            var reader = Database.MySQLDatabaseConnection.GetUsers();
 
             var doc = new HtmlDocument();
             doc.Load(path);

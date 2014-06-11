@@ -111,9 +111,10 @@ namespace WebServer.Server
                 // Check for secure connection
                 try
                 {
-                    Stream tmpStream = new MemoryStream(bdata);
+                    Stream tmpStream = new MemoryStream();
+                    tmpStream.Write(bdata, 0, bdata.Length);
                     sslstream = new SslStream(tmpStream, false);
-                    sslstream.AuthenticateAsServer(Server.ServerCertificate, false, SslProtocols.Ssl3, false);
+                    sslstream.AuthenticateAsServer(Server.ServerCertificate, true, SslProtocols.Ssl3, false);
                 }
                 catch (IOException ex)
                 {
