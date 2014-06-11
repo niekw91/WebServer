@@ -17,3 +17,4 @@ C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgility
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\bin\Debug\HtmlAgilityPack.xml
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.exe
 C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.pdb
+C:\Users\Niek Willems\Documents\GitHub\WebServer\WebServer\obj\Debug\WebServer.csprojResolveAssemblyReference.cache

@@ -41,25 +41,39 @@ namespace WebServer.Server
                                 PostConfiguration();
                         }
                     }
+                    else
+                    {
+                        Redirect("/index.html");
+                    }
                     break;
                 case "/index.html":
-                    if (Request.Method == "POST")
+                    if (Request.Method == "GET")
+                    {
+                        if (token != null && Authentication.IsTokenValid(token))
+                            Redirect("configuration.html");
+                    }
+                    else if (Request.Method == "POST")
                         Login();
                     break;
                 case "/user/index.html":
-                    GetUserTable();
+                    if (isAdmin)
+                        GetUserTable();
                     break;
                 case "/user/add.html":
-                    if (Request.Method == "POST")
+                    if (isAdmin)
                     {
-                        AddUser();
+                        if (Request.Method == "POST")
+                            AddUser();
                     }
                     break;
                 case "/user/edit.html":
-                    if (Request.Method == "GET")
-                        GetEditUser();
-                    else if (Request.Method == "POST")
-                        PostEditUser();
+                    if (isAdmin)
+                    {
+                        if (Request.Method == "GET")
+                            GetEditUser();
+                        else if (Request.Method == "POST")
+                            PostEditUser();
+                    }
                     break;
             }
         }
@@ -82,7 +96,7 @@ namespace WebServer.Server
                     String controlPort = Request.Values["control-port"];
                     String webRoot = Request.Values["webroot"];
                     String defaultPage = Request.Values["default-page"];
-                    String dirBrowsing = Request.Values["dir-browsing"];
+                    String dirBrowsing = Request.Values.ContainsKey("dir-browsing") ? "true" : "false";
                     // Write config file
                     ServerConfig.WriteConfig(webPort, controlPort, webRoot, defaultPage, dirBrowsing);
                     // Restart server
@@ -112,24 +126,23 @@ namespace WebServer.Server
                         Response.AddHeader("Set-Cookie", String.Format("UserID={0}; Max-Age=3600; Version=1", token));
 
                         //GetConfiguration();
-                        Response.StatusCode = 307;
-                        Response.StatusMessage = "Redirect";
-                        Response.AddHeader("Location", "configuration.html");
+                        Redirect("configuration.html");
                     }
                     else
                     {
                         Console.WriteLine("Failed login");
-                        //Response.Path = ServerConfig.Controlroot+@"\configuration.html";
-                        //GetConfiguration();
-                        //Response.StatusCode = 307;
-                        //Response.StatusMessage = "Redirect";
-                        //Response.AddHeader("Location", "configuration.html");
-                        //Response.AddHeader("X-Hello", "Hello");
                     }
                         
                 }
             }
             catch (KeyNotFoundException) { }
+        }
+
+        private void Redirect(string location)
+        {
+            Response.StatusCode = 307;
+            Response.StatusMessage = "Redirect";
+            Response.AddHeader("Location", location);
         }
 
         private void GetUserTable()

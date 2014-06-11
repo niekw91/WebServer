@@ -42,7 +42,7 @@ namespace WebServer.Utilities.HTML
                                 input.Attributes["value"].Value = ServerConfig.DefaultPage.ToString();
                                 break;
                             case "dir-browsing":
-                                //input.Attributes["value"].Value = ServerConfig.DirectoryBrowsing;
+                                if (!ServerConfig.DirectoryBrowsing) input.Attributes["checked"].Remove();
                                 break;
                             default:
                                 break;

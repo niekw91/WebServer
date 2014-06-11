@@ -124,7 +124,7 @@ namespace WebServer.Server
             // Save config
             doc.Save(CONFIG_PATH);
             // Set properties
-            SetProperties(Name, webPort, webRoot, defaultPage, DirectoryBrowsing.ToString(), controlPort, Controlroot);
+            SetProperties(Name, webPort, webRoot, defaultPage, dirBrowsing, controlPort, Controlroot);
         }
     }
 }

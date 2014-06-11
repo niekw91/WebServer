@@ -7,7 +7,7 @@
     <port>8081</port>
     <webroot>webroot/www</webroot>
     <default-page>index.html;index.htm</default-page>
-    <dir-browsing>True</dir-browsing>
+    <dir-browsing>true</dir-browsing>
   </server>
   <controlserver>
     <port>8084</port>
