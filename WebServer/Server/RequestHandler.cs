@@ -275,7 +275,7 @@ namespace WebServer.Server
                 string[] keyValues = parameters[i].Split('=');
                 if (keyValues.Length == 2)
                 {
-                    values.Add(keyValues[0].ToLower(), keyValues[1]);
+                    values.Add(keyValues[0].ToLower(), HttpUtility.HtmlEncode(keyValues[1]));
                 }
             }
             return values;
