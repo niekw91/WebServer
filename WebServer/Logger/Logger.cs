@@ -13,56 +13,60 @@ namespace WebServer.Logger
     {
         public static readonly string DIR_PATH = ServerConfig.Controlroot + @"/logger";
         public static readonly string LOGGER_PATH = ServerConfig.Controlroot + @"/logger/log.txt";
-        private static readonly int MAX_QUEUE_COUNT = 10;
-
         public static string MessagePrefix { get { return "[" + DateTime.Now.ToString() + "]: "; } }
 
-        private static object lockObject = new object();
+        public static readonly Object lockObject = new Object();
 
-        private Semaphore _queueSem;
+        private LogQueue _logQueue;
+        private Thread _logThread;
 
         public Logger()
         {
-            _queueSem = new Semaphore(0, MAX_QUEUE_COUNT);
+            if (!Directory.Exists(Logger.DIR_PATH))
+                Directory.CreateDirectory(Logger.DIR_PATH);
 
-            if (!Directory.Exists(DIR_PATH))
-                Directory.CreateDirectory(DIR_PATH);
+            _logQueue = new LogQueue();
 
-            WriteMessage("Logger start");
+            _logThread = new Thread(Run);
+        }
+
+        public void Start()
+        {
+            _logThread.Start();
+        }
+
+        public void Run()
+        {
+            while (true)
+            {
+                string message = _logQueue.Get();
+                if (!string.IsNullOrEmpty(message))
+                {
+                    WriteToFile(MessagePrefix + message + Environment.NewLine);
+                }
+            }
         }
 
         public void WriteMessage(string message)
         {
-            new Thread(new ParameterizedThreadStart(WriteFunc)).Start(message);
+            _logQueue.Put(message);
         }
 
-        private void WriteFunc(object m)
+        private void WriteToFile(string message)
         {
-            //_queueSem.WaitOne();
-            string message = (string)m;
             lock (lockObject)
             {
-                File.AppendAllText(LOGGER_PATH, MessagePrefix + message + Environment.NewLine);
+                File.AppendAllText(LOGGER_PATH, message);
             }
-            //_queueSem.Release();
         }
 
-        public void ReadLog(Delegate callback)
-        {
-            new Thread(new ParameterizedThreadStart(ReadFunc)).Start(callback);
-        }
-
-        private void ReadFunc(object cb)
-        {
-            //_queueSem.WaitOne();
-            Delegate callback = (Delegate)cb;
-            lock (lockObject)
-            {
-                string data = File.ReadAllText(LOGGER_PATH);
-                callback.DynamicInvoke(data);
-            }
-            //_queueSem.Release();
-        }
+        //public string Read()
+        //{
+        //    lock (lockObject)
+        //    {
+        //        return File.ReadAllText(LOGGER_PATH);
+        //    }
+        //}
         
     }
 }

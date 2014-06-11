@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ControlServer\ControlServer.cs" />
     <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Logger\LogQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controller\BaseController.cs" />

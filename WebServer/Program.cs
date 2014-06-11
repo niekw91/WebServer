@@ -35,6 +35,7 @@ namespace WebServer
             server.ServerName = "Webserver";
             cServer.ServerName = "Controlserver";
 
+            Logger.Start();
             StartServers();
 
             Console.Read();
