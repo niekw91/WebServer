@@ -16,13 +16,13 @@ namespace WebServer.Utilities.User
             return Database.MySQLDatabaseConnection.GetUsers();
         }
 
-        public static void Add(string username, string password)
+        public static void Add(string username, string password, int role)
         {
             string salt = Authentication.Authentication.CreateSalt(5);
 
             string hash = Authentication.Authentication.HashPasswordWithSalt(password, Encoding.UTF8.GetBytes(salt));
 
-            Database.MySQLDatabaseConnection.AddUser(username, hash, salt);
+            Database.MySQLDatabaseConnection.AddUser(username, hash, salt, role);
         }
 
         public static void Edit(int id, string username, string password)
@@ -31,7 +31,7 @@ namespace WebServer.Utilities.User
 
             string hash = Authentication.Authentication.HashPasswordWithSalt(password, Encoding.UTF8.GetBytes(salt));
 
-            Database.MySQLDatabaseConnection.AddUser(username, hash, salt);
+            //Database.MySQLDatabaseConnection.AddUser(username, hash, salt, 1);
         }
 
     }

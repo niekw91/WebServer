@@ -187,7 +187,7 @@ namespace WebServer.Server
             //Program.Logger.WriteMessage(String.Format("{0}, Client connected, IP: {1}, Start at: {2}", ServerName, ip, DateTime.Now.ToString()));
             //if(fullUrl != null)
             //    Program.Logger.WriteMessage(String.Format("{0}, URL: {1}", ServerName, fullUrl));
-            Program.Logger.WriteMessage(String.Format("{0}, Connection closed, TotalTime: {1}ms", ServerName, rqHandler.Timer.ElapsedMilliseconds));
+            Program.Logger.WriteMessage(String.Format("{0}, Connection closed, Totaltime: {1}ms", ServerName, rqHandler.Timer.ElapsedMilliseconds));
             Console.WriteLine("Total time: " + rqHandler.Timer.ElapsedMilliseconds + " ms");
             Console.WriteLine("Close connection");
             Console.WriteLine("----------------");

@@ -135,18 +135,19 @@ namespace WebServer.Utilities.Database
             catch (MySqlException ex) { Console.WriteLine(ex.Message); }
         }
 
-        public static void AddUser(string username, string password, string salt)
+        public static void AddUser(string username, string password, string salt, int role_id)
         {
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
                 {
                     conn.Open();
-                    MySqlCommand cmd = new MySqlCommand("INSERT INTO user (username, password, salt) VALUES(@username, @password, @salt)", conn);
+                    MySqlCommand cmd = new MySqlCommand("INSERT INTO user (username, password, salt, role_id) VALUES(@username, @password, @salt, @roleid)", conn);
 
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@password", password);
                     cmd.Parameters.AddWithValue("@salt", salt);
+                    cmd.Parameters.AddWithValue("@roleid", role_id);
 
                     cmd.ExecuteReader();
                     //reader.Close();

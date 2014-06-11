@@ -162,10 +162,13 @@ namespace WebServer.Server
             {
                 string username = Request.Values["username"];
                 string password = Request.Values["password"];
+                int role = Server.Roles["User"];
+                if(Request.Values.ContainsKey(Request.Values["role"]))
+                    role = Server.Roles[Request.Values["role"]];
 
                 if (!String.IsNullOrEmpty(username) && !String.IsNullOrEmpty(password))
                 {
-                    User.Add(username, password);
+                    User.Add(username, password, role);
 
                     Response.StatusCode = 307;
                     Response.StatusMessage = "Redirect";
