@@ -13,6 +13,8 @@ namespace WebServer.Server
     {
         private static readonly String CONFIG_PATH = @"config\serverconfig.xml";
 
+        public static readonly string DIR_BROWSING_FILE_PATH = @"\browsing.html";
+
         public static String Name { get; set; }
         public static int WebPort { get; set; }
         public static String Webroot { get; set; }

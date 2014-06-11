@@ -21,7 +21,9 @@ namespace WebServer.Server
             try
             {
                 return File.ReadAllBytes(path);
-            } catch(Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return null;
             }
         }
@@ -46,7 +48,7 @@ namespace WebServer.Server
             ReturnResponse(client.GetStream(), response);
         }
 
-        public void HandleTimeout(TcpClient client) 
+        public void HandleTimeout(TcpClient client)
         {
             Response response = new Response();
             response.StatusCode = 408;
@@ -65,7 +67,7 @@ namespace WebServer.Server
             NetworkStream stream = client.GetStream();
             //@"C:\Users\Remi\Documents\GitHub\WebServer\WebServer\index.html"
             Response response = GetResponseForRequest(request, root);
-            
+
             Console.WriteLine(response.GetHeadersAsString());
 
             ReturnResponse(stream, response);
@@ -77,20 +79,28 @@ namespace WebServer.Server
 
             response.StatusCode = 200;
             response.StatusMessage = "OK";
+            bool dirBrowsing = false;
 
             if (!ParseValidUrl(request.Url))
             {
                 request.Url = FixUrl(request.Url);
-                request.Url = request.Url + GetDefaultPage(request, root);
+                string defPage = GetDefaultPage(request, root);
+                dirBrowsing = (ServerConfig.DirectoryBrowsing && defPage == null && request.Port == ServerConfig.WebPort);
+                if (!dirBrowsing)
+                    request.Url = request.Url + defPage;
+                Console.WriteLine("Dir browsing: " + dirBrowsing);
             }
 
             response.Path = root + request.Url;
-            if (File.Exists(response.Path))
+            if (File.Exists(response.Path) || dirBrowsing)
             {
-                response.Content = File.ReadAllBytes(response.Path);
+                if (!dirBrowsing)
+                    response.Content = File.ReadAllBytes(response.Path);
+                else
+                    response.Content = LoadDirBrowsingPage(response.Path);
             }
 
-            if(!response.SetDefaultHeaders())
+            if (!response.SetDefaultHeaders())
                 response.Content = GetErrorPage(response.StatusCode);
 
             return response;
@@ -124,7 +134,7 @@ namespace WebServer.Server
         {
             //string[] urlParts = url.Split('/');
             //if (String.IsNullOrEmpty(urlParts[urlParts.Length - 1]))
-            if(!url.EndsWith("/"))
+            if (!url.EndsWith("/"))
             {
                 url += "/";
             }
@@ -138,6 +148,26 @@ namespace WebServer.Server
             {
                 if (File.Exists(root + request.Url + defPage))
                     return defPage;
+            }
+            return null;
+        }
+
+        private byte[] LoadDirBrowsingPage(string originPath)
+        {
+            Console.WriteLine("Dir browsing");
+
+            string root = ServerConfig.Controlroot;
+            string path = root + ServerConfig.DIR_BROWSING_FILE_PATH;
+
+            DirectoryInfo directory = new DirectoryInfo(originPath);
+            string[] files = directory.GetFiles().Select(f => f.Name).ToArray();
+            string[] directories = directory.GetDirectories().Select(f => f.Name).ToArray();
+
+            if(files.Length > 0 || directories.Length > 0) {
+                Utilities.HTML.HTMLParser parser = new Utilities.HTML.HTMLParser();
+                string dirPageContent = parser.ParseDirectoryBrowsingHTML(path, directories, files);
+
+                return Encoding.UTF8.GetBytes(dirPageContent);
             }
             return null;
         }

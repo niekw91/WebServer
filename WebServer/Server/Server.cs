@@ -147,9 +147,13 @@ namespace WebServer.Server
 
             String id = null;
 
+            //string ip = ((IPEndPoint)rqHandler.Client.Client.RemoteEndPoint).Address.ToString();
+            //string fullUrl = null;
+
             if (rqHandler.IsRequestValid(rqHandler.Request))
             {
                 Program.Logger.WriteMessage(String.Format("{0}, URL: {1}",ServerName, rqHandler.Request.FullUrl));
+                //fullUrl = rqHandler.Request.FullUrl;
 
                 rqHandler.Request.IPAdress = ((IPEndPoint)rqHandler.Client.Client.RemoteEndPoint).Address.ToString();
 
@@ -180,6 +184,9 @@ namespace WebServer.Server
 
             rqHandler.Client.Close();
             rqHandler.Timer.Stop();
+            //Program.Logger.WriteMessage(String.Format("{0}, Client connected, IP: {1}, Start at: {2}", ServerName, ip, DateTime.Now.ToString()));
+            //if(fullUrl != null)
+            //    Program.Logger.WriteMessage(String.Format("{0}, URL: {1}", ServerName, fullUrl));
             Program.Logger.WriteMessage(String.Format("{0}, Connection closed, TotalTime: {1}ms", ServerName, rqHandler.Timer.ElapsedMilliseconds));
             Console.WriteLine("Total time: " + rqHandler.Timer.ElapsedMilliseconds + " ms");
             Console.WriteLine("Close connection");

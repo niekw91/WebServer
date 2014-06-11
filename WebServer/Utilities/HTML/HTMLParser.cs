@@ -126,5 +126,36 @@ namespace WebServer.Utilities.HTML
             }
             return result;
         }
+
+        public string ParseDirectoryBrowsingHTML(string path, string[] dirs, string[] files)
+        {
+            var doc = new HtmlDocument();
+            doc.Load(path);
+
+            HtmlNode fileList = doc.DocumentNode.SelectSingleNode("//ul[@id='list']");
+
+            StringBuilder listHTML = new StringBuilder();
+            string listItemFormat = "<li>{0} <a href='{1}'>{1}</a></li>";
+
+            foreach (string dir in dirs)
+            {
+                listHTML.Append(String.Format(listItemFormat, "D >", dir));
+            }
+            foreach (string file in files)
+            {
+                listHTML.Append(String.Format(listItemFormat, "F >", file));
+            }
+
+            fileList.InnerHtml = listHTML.ToString();
+
+            string result = null;
+            using (StringWriter writer = new StringWriter())
+            {
+                doc.Save(writer);
+                result = writer.ToString();
+                writer.Flush();
+            }
+            return result;
+        }
     }
 }
