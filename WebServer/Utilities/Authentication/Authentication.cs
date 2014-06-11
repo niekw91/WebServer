@@ -90,7 +90,7 @@ namespace WebServer.Utilities.Authentication
             if (token != null)
             {
                 Dictionary<String, String> credentials = MySQLDatabaseConnection.GetUser(token);
-                if (credentials["role_id"] == roles["Administrator"].ToString())
+                if (credentials.Count > 0 && credentials["role_id"] == roles["Administrator"].ToString())
                 {
                     return true;
                 }
