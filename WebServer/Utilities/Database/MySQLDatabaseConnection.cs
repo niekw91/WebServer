@@ -38,25 +38,9 @@ namespace WebServer.Utilities.Database
             return salt;
         }
 
-        private static Dictionary<String, String> CreateUserDictionary(MySqlDataReader reader)
-        {
-            Dictionary<String, String> credentials = new Dictionary<String, String>();
-            if (reader.Read())
-            {
-                credentials.Add("id", reader["id"].ToString());
-                credentials.Add("username", reader["username"].ToString());
-                credentials.Add("password", reader["password"].ToString());
-                credentials.Add("salt", reader["salt"].ToString());
-                credentials.Add("role_id", reader["role_id"].ToString());
-                credentials.Add("token", reader["token"].ToString());
-            }
-            reader.Close();
-            return credentials;
-        }
-
         public static Dictionary<String, String> GetLoginCredentials(string username, string password)
         {
-            Dictionary<String, String> credentials = null;
+            Dictionary<String, String> credentials = new Dictionary<String, String>();
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
@@ -68,7 +52,16 @@ namespace WebServer.Utilities.Database
                     cmd.Parameters.AddWithValue("@password", password);
 
                     MySqlDataReader reader = cmd.ExecuteReader();
-                    credentials = CreateUserDictionary(reader);
+                    if (reader.Read()) 
+                    {
+                        credentials.Add("id", reader["id"].ToString());
+                        credentials.Add("username", reader["username"].ToString());
+                        credentials.Add("password", reader["password"].ToString());
+                        credentials.Add("salt", reader["salt"].ToString());
+                        credentials.Add("role_id", reader["role_id"].ToString());
+                        credentials.Add("token", reader["token"].ToString());
+                    }
+                    reader.Close();
                 }
             }
             catch (MySqlException ex) { Console.WriteLine(ex.Message); }
@@ -96,34 +89,6 @@ namespace WebServer.Utilities.Database
             return null;
         }
 
-<<<<<<< HEAD
-
-        public static Dictionary<String, String> GetUser(string token)
-        {
-            Dictionary<String, String> credentials = null;
-=======
-
-        public static MySqlDataReader GetUser(int id)
-        {
->>>>>>> origin/master
-            try
-            {
-                using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
-                {
-                    conn.Open();
-<<<<<<< HEAD
-
-                    MySqlCommand cmd = new MySqlCommand("SELECT * FROM user WHERE token=@token;", conn);
-
-                    cmd.Parameters.AddWithValue("@token", token);
-
-                    MySqlDataReader reader = cmd.ExecuteReader();
-                    credentials = CreateUserDictionary(reader);
-                }
-            }
-            catch (MySqlException ex) { Console.WriteLine(ex.Message); }
-            return credentials;
-        }
 
         public static MySqlDataReader GetUser(int id)
         {
@@ -132,8 +97,6 @@ namespace WebServer.Utilities.Database
                 using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
                 {
                     conn.Open();
-=======
->>>>>>> origin/master
 
                     MySqlCommand cmd = new MySqlCommand("SELECT * FROM user WHERE id=@id;", conn);
 
@@ -145,15 +108,9 @@ namespace WebServer.Utilities.Database
             }
             catch (MySqlException ex) { Console.WriteLine(ex.Message); }
             return null;
-<<<<<<< HEAD
         }
 
         public static void SetUserToken(string token, string id)
-=======
-        }
-
-        public static void SetUserToken(string token, string id)
->>>>>>> origin/master
         {
             try
             {
