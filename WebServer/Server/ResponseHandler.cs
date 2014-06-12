@@ -159,15 +159,17 @@ namespace WebServer.Server
             string root = ServerConfig.Controlroot;
             string path = root + ServerConfig.DIR_BROWSING_FILE_PATH;
 
-            DirectoryInfo directory = new DirectoryInfo(originPath);
-            string[] files = directory.GetFiles().Select(f => f.Name).ToArray();
-            string[] directories = directory.GetDirectories().Select(f => f.Name).ToArray();
+            if(Directory.Exists(originPath)) {
+                DirectoryInfo directory = new DirectoryInfo(originPath);
+                string[] files = directory.GetFiles().Select(f => f.Name).ToArray();
+                string[] directories = directory.GetDirectories().Select(f => f.Name).ToArray();
 
-            if(files.Length > 0 || directories.Length > 0) {
-                Utilities.HTML.HTMLParser parser = new Utilities.HTML.HTMLParser();
-                string dirPageContent = parser.ParseDirectoryBrowsingHTML(path, directories, files);
+                if(files.Length > 0 || directories.Length > 0) {
+                    Utilities.HTML.HTMLParser parser = new Utilities.HTML.HTMLParser();
+                    string dirPageContent = parser.ParseDirectoryBrowsingHTML(path, directories, files);
 
-                return Encoding.UTF8.GetBytes(dirPageContent);
+                    return Encoding.UTF8.GetBytes(dirPageContent);
+                }
             }
             return null;
         }
