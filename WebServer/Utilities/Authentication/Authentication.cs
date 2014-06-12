@@ -71,7 +71,8 @@ namespace WebServer.Utilities.Authentication
             {
                 return false;
             }
-            return true;
+            Dictionary<String, String> user = MySQLDatabaseConnection.GetUser(token);
+            return (user.Count > 0);
         }
 
         public static Dictionary<String, int> GetRoles()

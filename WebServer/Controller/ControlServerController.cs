@@ -166,7 +166,7 @@ namespace WebServer.Server
                 string username = Request.Values["username"];
                 string password = Request.Values["password"];
                 int role = Server.Roles["User"];
-                if(Request.Values.ContainsKey(Request.Values["role"]))
+                if(Server.Roles.ContainsKey(Request.Values["role"]))
                     role = Server.Roles[Request.Values["role"]];
 
                 if (!String.IsNullOrEmpty(username) && !String.IsNullOrEmpty(password))

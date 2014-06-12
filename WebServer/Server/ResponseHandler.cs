@@ -19,6 +19,7 @@ namespace WebServer.Server
             response.AddHeader("Content-type", "text/html");
             response.AddHeader("Cache-Control", "no-cache, must-revalidate");
             response.AddHeader("Server", ServerConfig.Name);
+            response.Content = GetErrorPage(response.StatusCode);
 
             ReturnResponse(client.GetStream(), response);
         }

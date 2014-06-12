@@ -6,7 +6,7 @@
   <server>
     <port>8081</port>
     <webroot>webroot/www</webroot>
-    <default-page>index.html;index.htm</default-page>
+    <default-page>index.html;poep</default-page>
     <dir-browsing>true</dir-browsing>
   </server>
   <controlserver>

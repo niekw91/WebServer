@@ -109,7 +109,7 @@ namespace WebServer.Server
                     Console.WriteLine("SSL IO Exception: " + ex.Message);
                     sslstream = null;
                 }
-                if (bdata != null && bdata.Length > 0)
+                if (IsRequestValid(Request) && bdata != null && bdata.Length > 0)
                 {
                     string data =Encoding.UTF8.GetString(bdata);
                     Console.WriteLine(data);
