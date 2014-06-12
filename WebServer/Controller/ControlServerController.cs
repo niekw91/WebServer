@@ -11,6 +11,7 @@ namespace WebServer.Server
 {
     class ControlServerController : BaseController
     {
+        // Boolean to check if current request is made by an admin
         private bool isAdmin = false;
 
         public override void Init()
@@ -20,7 +21,9 @@ namespace WebServer.Server
             string token = Request.GetHeader("cookie");
             if (token != null)
             {
+                // Split the token string and retrieve the value
                 token = token.Split('=')[1];
+                // Check if current request is by an admin
                 isAdmin = Authentication.IsCurrentUserAdmin(token, Server.Roles);
             }
 
@@ -34,7 +37,7 @@ namespace WebServer.Server
                         else if (Request.Method == "POST")
                         {
                             Console.WriteLine("Referer: " + Request.GetHeader("referer"));
-                            // Dirty check of de post niet van ergens anders komt
+                            // Check if post is from configuration page
                             if (!String.IsNullOrEmpty(Request.GetHeader("referer")) && !Request.GetHeader("referer").Contains("configuration.html"))
                                 GetConfiguration();
                             else
@@ -49,6 +52,7 @@ namespace WebServer.Server
                 case "/index.html":
                     if (Request.Method == "GET")
                     {
+                        // Check if user is already logged in, if so redirect to config
                         if (token != null && Authentication.IsTokenValid(token))
                             Redirect("configuration.html");
                     }
@@ -66,15 +70,6 @@ namespace WebServer.Server
                             AddUser();
                     }
                     break;
-                case "/user/edit.html":
-                    if (isAdmin)
-                    {
-                        if (Request.Method == "GET")
-                            GetEditUser();
-                        else if (Request.Method == "POST")
-                            PostEditUser();
-                    }
-                    break;
                 case "/logout.html":
                     Logout();
                     break;
@@ -85,8 +80,6 @@ namespace WebServer.Server
         {
             Response.AddHeader("Set-Cookie", String.Format("UserID=deleted; expires=Thu, 01 Jan 1970 00:00:00 GMT"));
             Redirect("index.html");
-            //Response.Content = Encoding.UTF8.GetBytes("<script>document.location.href='index.html'</script>");
-            //Response.AddHeader("Content-Length", Response.Content.Length.ToString());
         }
 
         private void GetConfiguration()
@@ -133,10 +126,9 @@ namespace WebServer.Server
                     {
                         Console.WriteLine("Success login");
                         Response.Path = ServerConfig.Controlroot+ @"\configuration.html";
-                        
+                        // Set cookie header
                         Response.AddHeader("Set-Cookie", String.Format("UserID={0}; Max-Age=3600; Version=1", token));
-
-                        //GetConfiguration();
+                        // Redirect to config
                         Redirect("configuration.html");
                     }
                     else
@@ -185,37 +177,6 @@ namespace WebServer.Server
                     Response.StatusMessage = "Redirect";
                     Response.AddHeader("Location", "/user/index.html");
                 }
-            }
-        }
-
-        private void PostEditUser()
-        {
-            if (Request.Values.Count > 0)
-            {
-                int id = Convert.ToInt32(Request.Values["id"]);
-                string username = Request.Values["username"];
-                string password = Request.Values["password"];
-
-                if (!String.IsNullOrEmpty(username) && !String.IsNullOrEmpty(password))
-                {
-                    User.Edit(id, username, password);
-
-                    Response.StatusCode = 307;
-                    Response.StatusMessage = "Redirect";
-                    Response.AddHeader("Location", "/user/index.html");
-                }
-            }
-        }
-
-        private void GetEditUser()
-        {
-            HTMLParser parser = new HTMLParser();
-            Response.Path = Response.Path.Replace("add", "edit");
-            string content = parser.ParseEditUserHTML(Response.Path, 0);
-            if (content != null)
-            {
-                Response.Content = Encoding.UTF8.GetBytes(content);
-                Response.AddHeader("Content-Length", Response.Content.Length.ToString());
             }
         }
     }

@@ -20,16 +20,13 @@ namespace WebServer.Server
         public void RouteUrl(Server server)
         {
             Console.WriteLine(_request.Port);
-            // Console.WriteLine("Route URL here");
             BaseController controller = null;
             if (_request.Port == ServerConfig.WebPort)
             {
-                //RouteWeb();
                 controller = new ServerController();
             }
             else if (_request.Port == ServerConfig.ControlPort)
             {
-                //RouteControl();
                 controller = new ControlServerController();
             }
             controller.Request = _request;

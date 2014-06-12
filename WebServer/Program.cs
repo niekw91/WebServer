@@ -19,9 +19,6 @@ namespace WebServer
 
         static void Main(string[] args)
         {
-            // Set on process end event
-            //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
-
             // Set maximum number of threads
             ThreadPool.SetMaxThreads(20, 20);
 

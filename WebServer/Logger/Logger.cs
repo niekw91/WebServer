@@ -54,19 +54,14 @@ namespace WebServer.Logger
 
         private void WriteToFile(string message)
         {
-            lock (lockObject)
+            try
             {
-                File.AppendAllText(LOGGER_PATH, message);
+                lock (lockObject)
+                {
+                    File.AppendAllText(LOGGER_PATH, message);
+                }
             }
-        }
-
-        //public string Read()
-        //{
-        //    lock (lockObject)
-        //    {
-        //        return File.ReadAllText(LOGGER_PATH);
-        //    }
-        //}
-        
+            catch (Exception) { }
+        }       
     }
 }

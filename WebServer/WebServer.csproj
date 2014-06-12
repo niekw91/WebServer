@@ -75,7 +75,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Config\serverconfig.xml" />
     <Content Include="index.html" />
     <Content Include="login_light.png" />
   </ItemGroup>

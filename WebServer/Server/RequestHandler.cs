@@ -77,25 +77,14 @@ namespace WebServer.Server
 
         public ResponseHandler HandleRequest()
         {
-            //System.Threading.Thread.Sleep(100);
-            //object[] param = (object[])paramaters;
-            //TcpClient client = (TcpClient)param[0];
-
             NetworkStream stream = Client.GetStream();
-
             SslStream sslstream = null;
-            //SslStream sslstream = new SslStream(Client.GetStream(), false);
-            //sslstream.AuthenticateAsServer(Server.ServerCertificate, false, SslProtocols.Tls, false);
             // Create response handler
             ResponseHandler rsHandler = new ResponseHandler();
 
             bool timeout = false;
             // Block until data or timeout
             while (!stream.DataAvailable) { if (Timer.ElapsedMilliseconds > TimeoutMS || !Client.Connected) { timeout = true; break; } }
-
-            
-            //byte[] data = ReadFully(stream);
-            //timeout = (data == null);
 
             if (timeout)
             {
@@ -107,27 +96,20 @@ namespace WebServer.Server
                 Console.WriteLine(Client.Available);
                 // Get request Object
                 byte[] bdata = StreamToByteArray(((sslstream != null) ? (System.IO.Stream)sslstream : stream), Client.Available);
-
                 // Check for secure connection
                 try
                 {
                     Stream tmpStream = new MemoryStream();
                     tmpStream.Write(bdata, 0, bdata.Length);
                     sslstream = new SslStream(tmpStream, false);
-                    sslstream.AuthenticateAsServer(Server.ServerCertificate, true, SslProtocols.Ssl3, false);
+                    sslstream.AuthenticateAsServer(Server.ServerCertificate, false, SslProtocols.Ssl3, false);
                 }
                 catch (IOException ex)
                 {
                     Console.WriteLine("SSL IO Exception: " + ex.Message);
                     sslstream = null;
                 }
-                //string data = StreamToString(stream, Client.Available);
-
-
-                // Check if request is valid
-                //if (IsRequestValid(request))
-                //if(!String.IsNullOrEmpty(data))
-                if(bdata != null && bdata.Length > 0)
+                if (bdata != null && bdata.Length > 0)
                 {
                     string data =Encoding.UTF8.GetString(bdata);
                     Console.WriteLine(data);
@@ -136,6 +118,7 @@ namespace WebServer.Server
                     string body = GetRequestBodyString(data.Split(new string[] { Environment.NewLine }, StringSplitOptions.None));
 
                     Console.WriteLine("Body: " + body);
+                    // Check if body has data
                     if (!CheckIfBodyAndAdd(request, body, sslstream))
                     {
                         // Handle timeout response
@@ -148,16 +131,8 @@ namespace WebServer.Server
                         // Parse request values
                         ParseRequestValues(request);
 
-                        // Set root folder
-                        //String root = (String)param[1];
-
-                        foreach (KeyValuePair<String, String> kvp in request.Values)
-                        {
-                            Console.WriteLine(String.Format("key: {0} value {1}", kvp.Key, kvp.Value));
-                        }
-
                         Console.WriteLine("Start handler");
-                        //rsHandler.HandleResponse(Client, request, responseRoot);
+
                         Request = request;
                     }
                 }
@@ -176,12 +151,8 @@ namespace WebServer.Server
         {
             // Read content from stream and Parse to Request
             byte[] bytes = new Byte[length];
-
             stream.Read(bytes, 0, bytes.Length);
 
-            //translate bytes of request to string
-            
-            //Console.WriteLine(data);
             return bytes;
         }
 
@@ -221,11 +192,6 @@ namespace WebServer.Server
 
             return !timeout;
         }
-
-        //private Request ParseRequestFromString(string data)
-        //{
-        //    return ParseStringToRequest(data);
-        //}
 
         public bool IsRequestValid(Request request)
         {
@@ -267,7 +233,7 @@ namespace WebServer.Server
 
         private Dictionary<string, string> ParseFormData(string formDataStr, Dictionary<string, string> values)
         {
-            //Dictionary<string, string> values = ((valuesDict == null) ? new Dictionary<string, string>() : valuesDict);
+            // Decode form data string
             formDataStr = HttpUtility.UrlDecode(formDataStr);
             string[] parameters = formDataStr.Split('&');
             for (int i = 0; i < parameters.Length; i++)
@@ -285,11 +251,5 @@ namespace WebServer.Server
         {
             Request.Id = Guid.NewGuid().ToString();
         }
-
-        //private bool IsRequestSecureDirtyCheck()
-        //{
-        //    string data = StreamToString(Client.GetStream(), Client.Available);
-        //    return (!String.IsNullOrEmpty(data) && !data.Contains("HTTP/1.1"));
-        //}
     }
 }

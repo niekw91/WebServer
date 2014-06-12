@@ -15,9 +15,8 @@ namespace WebServer.Server
     class Server
     {
         private static readonly String CERTIFICATE_PATH = @"config\server.pfx";
-        public static X509Certificate ServerCertificate { get; set; }
+        public static X509Certificate2 ServerCertificate { get; set; }
         public static Dictionary<String, int> Roles { get; set; }
-        //public Dictionary<String, String> CurrentUser { get; set; }
 
         protected TcpListener tcpListener;
         protected Thread listenThread;
@@ -39,8 +38,8 @@ namespace WebServer.Server
             // Get user roles from database
             Roles = Authentication.GetRoles();
             // Create certificate from file
-            //ServerCertificate = new X509Certificate2(CERTIFICATE_PATH, "");
-            ServerCertificate = X509Certificate.CreateFromCertFile(CERTIFICATE_PATH);
+            ServerCertificate = new X509Certificate2(CERTIFICATE_PATH, "");
+            //ServerCertificate = X509Certificate.CreateFromCertFile(CERTIFICATE_PATH);
             RestartId = "";
             // Create client dictionary
             clients = new Dictionary<string, TcpClient>();
@@ -98,15 +97,7 @@ namespace WebServer.Server
                 //blocks until a client has connected to the server
                 try
                 {
-                    // Error op server restart,
-                    // Note, bij restart gaan beide servers waarschijnlijk op zelfde thread restarten
                     TcpClient client = this.tcpListener.AcceptTcpClient();
-                    //CustomTcpClient custom = new CustomTcpClient();
-                    //custom.Client = client;
-                    //custom.GenerateId();
-
-                    //client.ReceiveTimeout = 1;
-                    //client.SendTimeout = 5;
                     // Start timing request
                     Stopwatch timer = new Stopwatch();
                     timer.Start();
@@ -120,13 +111,11 @@ namespace WebServer.Server
 
                     Program.Logger.WriteMessage(String.Format("{0}, Client connected, IP: {1}, Start at: {2}", ServerName, ip, DateTime.Now.ToString()));
 
-                    //create a thread to handle communication 
-                    //with connected client
+                    // Create requesthandler
                     RequestHandler rqHandler = new RequestHandler();
                     rqHandler.Timer = timer;
                     rqHandler.Client = client;
-                    // Create object array with parameters for request handler
-                    //object[] parameters = new object[2] { client, rootFolder };
+
                     ThreadPool.QueueUserWorkItem(DoRequest, rqHandler);
                 }
                 catch (Exception se) { Console.WriteLine(se.Message); }
@@ -146,9 +135,6 @@ namespace WebServer.Server
             ResponseHandler rsHandler = rqHandler.HandleRequest();
 
             String id = null;
-
-            //string ip = ((IPEndPoint)rqHandler.Client.Client.RemoteEndPoint).Address.ToString();
-            //string fullUrl = null;
 
             if (rqHandler.IsRequestValid(rqHandler.Request))
             {
@@ -179,14 +165,9 @@ namespace WebServer.Server
                 id = rqHandler.Request.Id;
             }
 
-            
-            //rsHandler.HandleResponse(rqHandler.Client, rqHandler.Request, rootFolder)
-
             rqHandler.Client.Close();
             rqHandler.Timer.Stop();
-            //Program.Logger.WriteMessage(String.Format("{0}, Client connected, IP: {1}, Start at: {2}", ServerName, ip, DateTime.Now.ToString()));
-            //if(fullUrl != null)
-            //    Program.Logger.WriteMessage(String.Format("{0}, URL: {1}", ServerName, fullUrl));
+
             Program.Logger.WriteMessage(String.Format("{0}, Connection closed, Totaltime: {1}ms", ServerName, rqHandler.Timer.ElapsedMilliseconds));
             Console.WriteLine("Total time: " + rqHandler.Timer.ElapsedMilliseconds + " ms");
             Console.WriteLine("Close connection");

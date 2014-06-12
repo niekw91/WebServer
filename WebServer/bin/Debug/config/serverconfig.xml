@@ -5,7 +5,7 @@
   </general>
   <server>
     <port>8081</port>
-    <webroot>webroot/homo</webroot>
+    <webroot>webroot/www</webroot>
     <default-page>index.html;index.htm</default-page>
     <dir-browsing>true</dir-browsing>
   </server>

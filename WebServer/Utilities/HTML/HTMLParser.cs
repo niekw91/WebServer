@@ -101,32 +101,6 @@ namespace WebServer.Utilities.HTML
             return result;
         }
 
-        public string ParseEditUserHTML(string path, int id)
-        {
-            MySql.Data.MySqlClient.MySqlDataReader reader = Database.MySQLDatabaseConnection.GetUser(id);
-
-            var doc = new HtmlDocument();
-            doc.Load(path);
-
-            foreach (HtmlNode form in doc.DocumentNode.SelectNodes("//form"))
-            {
-                foreach (HtmlNode input in form.SelectNodes("input"))
-                {
-
-                }
-            }
-
-            
-            string result = null;
-            using (StringWriter writer = new StringWriter())
-            {
-                doc.Save(writer);
-                result = writer.ToString();
-                writer.Flush();
-            }
-            return result;
-        }
-
         public string ParseDirectoryBrowsingHTML(string path, string[] dirs, string[] files)
         {
             var doc = new HtmlDocument();

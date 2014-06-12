@@ -10,31 +10,6 @@ namespace WebServer.Server
 {
     class ResponseHandler
     {
-
-        public byte[] GetFileForUrlPath(string url)
-        {
-            string path = ServerConfig.Webroot + url;
-            if (url.EndsWith("/") || !url.Contains('.'))
-            {
-                path += ServerConfig.DefaultPage.Split(';')[0];
-            }
-            try
-            {
-                return File.ReadAllBytes(path);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        public string ParseUrlToPath(string url)
-        {
-            string path = ServerConfig.Webroot + url;
-
-            return path;
-        }
-
         public void HandleBadRequest(TcpClient client)
         {
             Response response = new Response();
@@ -60,17 +35,6 @@ namespace WebServer.Server
             response.Content = GetErrorPage(response.StatusCode);
 
             ReturnResponse(client.GetStream(), response);
-        }
-
-        public void HandleResponse(TcpClient client, Request request, String root)
-        {
-            NetworkStream stream = client.GetStream();
-            //@"C:\Users\Remi\Documents\GitHub\WebServer\WebServer\index.html"
-            Response response = GetResponseForRequest(request, root);
-
-            Console.WriteLine(response.GetHeadersAsString());
-
-            ReturnResponse(stream, response);
         }
 
         public Response GetResponseForRequest(Request request, string root)
@@ -116,7 +80,7 @@ namespace WebServer.Server
 
         public Byte[] GetErrorPage(int statusCode)
         {
-            String path = @"webroot\www\errors\{0}.html";
+            String path = ServerConfig.Webroot + @"\errors\{0}.html";
             if (File.Exists(String.Format(path, statusCode)))
             {
                 return File.ReadAllBytes(String.Format(path, statusCode));
@@ -132,8 +96,6 @@ namespace WebServer.Server
 
         private string FixUrl(string url)
         {
-            //string[] urlParts = url.Split('/');
-            //if (String.IsNullOrEmpty(urlParts[urlParts.Length - 1]))
             if (!url.EndsWith("/"))
             {
                 url += "/";
@@ -154,8 +116,6 @@ namespace WebServer.Server
 
         private byte[] LoadDirBrowsingPage(string originPath)
         {
-            Console.WriteLine("Dir browsing");
-
             string root = ServerConfig.Controlroot;
             string path = root + ServerConfig.DIR_BROWSING_FILE_PATH;
 
@@ -173,15 +133,5 @@ namespace WebServer.Server
             }
             return null;
         }
-
-        //public string AddHeader(string header, string value)
-        //{
-        //    return header + ": " + value + Environment.NewLine;
-        //}
-
-        //public string GetContentType(string url)
-        //{
-        //    return (url.EndsWith(".png")) ? "image/png" : "text/html";
-        //}
     }
 }
