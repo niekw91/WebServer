@@ -135,15 +135,15 @@ namespace WebServer.Utilities.HTML
             HtmlNode fileList = doc.DocumentNode.SelectSingleNode("//ul[@id='list']");
 
             StringBuilder listHTML = new StringBuilder();
-            string listItemFormat = "<li>{0} <a href='{1}'>{1}</a></li>";
+            string listItemFormat = "<li>{0} <a href='{1}'>{2}</a></li>";
 
             foreach (string dir in dirs)
             {
-                listHTML.Append(String.Format(listItemFormat, "D >", dir));
+                listHTML.Append(String.Format(listItemFormat, "D >", dir+"/", dir));
             }
             foreach (string file in files)
             {
-                listHTML.Append(String.Format(listItemFormat, "F >", file));
+                listHTML.Append(String.Format(listItemFormat, "F >", file, file));
             }
 
             fileList.InnerHtml = listHTML.ToString();
