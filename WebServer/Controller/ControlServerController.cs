@@ -75,7 +75,18 @@ namespace WebServer.Server
                             PostEditUser();
                     }
                     break;
+                case "/logout.html":
+                    Logout();
+                    break;
             }
+        }
+
+        private void Logout()
+        {
+            Response.AddHeader("Set-Cookie", String.Format("UserID=deleted; expires=Thu, 01 Jan 1970 00:00:00 GMT"));
+            Redirect("index.html");
+            //Response.Content = Encoding.UTF8.GetBytes("<script>document.location.href='index.html'</script>");
+            //Response.AddHeader("Content-Length", Response.Content.Length.ToString());
         }
 
         private void GetConfiguration()

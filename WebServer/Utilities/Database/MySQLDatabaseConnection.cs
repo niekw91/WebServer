@@ -5,11 +5,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebServer.Utilities.Interfaces;
 
 namespace WebServer.Utilities.Database
 {
-    class MySQLDatabaseConnection : IDatabaseConnection
+    class MySQLDatabaseConnection
     {
         private static readonly string CONNECTION_STRING = "Server=databases.aii.avans.nl;Database=nwmwille_db;Uid=nwmwille;Pwd=stoeptegel;";
 

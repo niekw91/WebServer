@@ -59,6 +59,7 @@ namespace WebServer
         {
             server.Port = ServerConfig.WebPort;
             cServer.Port = ServerConfig.ControlPort;
+            server.RootFolder = ServerConfig.Webroot;
 
             server.Restart();
             cServer.Restart();

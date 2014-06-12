@@ -21,7 +21,7 @@ namespace WebServer.Server
 
         protected TcpListener tcpListener;
         protected Thread listenThread;
-        protected String rootFolder;
+        public String RootFolder { get; set; }
 
         private bool running;
         public string RestartId { get; set; }
@@ -44,7 +44,7 @@ namespace WebServer.Server
             RestartId = "";
             // Create client dictionary
             clients = new Dictionary<string, TcpClient>();
-            this.rootFolder = root;
+            this.RootFolder = root;
             this.IPAddress = ip;
             this.Port = port;
         }
@@ -160,7 +160,7 @@ namespace WebServer.Server
                 rqHandler.GenerateId();
                 clients.Add(rqHandler.Request.Id, rqHandler.Client);
 
-                Response response = rsHandler.GetResponseForRequest(rqHandler.Request, rootFolder);
+                Response response = rsHandler.GetResponseForRequest(rqHandler.Request, RootFolder);
 
                 // Handle request in code
                 if (!response.IsErrorResponse())
