@@ -109,31 +109,39 @@ namespace WebServer.Server
                     Console.WriteLine("SSL IO Exception: " + ex.Message);
                     sslstream = null;
                 }
-                if (IsRequestValid(Request) && bdata != null && bdata.Length > 0)
+                if (bdata != null && bdata.Length > 0)
                 {
                     string data =Encoding.UTF8.GetString(bdata);
                     Console.WriteLine(data);
 
                     Request request = ParseStringToRequest(data);
-                    string body = GetRequestBodyString(data.Split(new string[] { Environment.NewLine }, StringSplitOptions.None));
-
-                    Console.WriteLine("Body: " + body);
-                    // Check if body has data
-                    if (!CheckIfBodyAndAdd(request, body, sslstream))
+                    if (IsRequestValid(request))
                     {
-                        // Handle timeout response
-                        rsHandler.HandleTimeout(Client);
+                        string body = GetRequestBodyString(data.Split(new string[] { Environment.NewLine }, StringSplitOptions.None));
+
+                        Console.WriteLine("Body: " + body);
+                        // Check if body has data
+                        if (!CheckIfBodyAndAdd(request, body, sslstream))
+                        {
+                            // Handle timeout response
+                            rsHandler.HandleTimeout(Client);
+                        }
+                        else
+                        {
+                            // Set full url
+                            request.FullUrl = request.Url;
+                            // Parse request values
+                            ParseRequestValues(request);
+
+                            Console.WriteLine("Start handler");
+
+                            Request = request;
+                        }
                     }
                     else
                     {
-                        // Set full url
-                        request.FullUrl = request.Url;
-                        // Parse request values
-                        ParseRequestValues(request);
-
-                        Console.WriteLine("Start handler");
-
-                        Request = request;
+                        Console.WriteLine("Invalid request");
+                        rsHandler.HandleBadRequest(Client);
                     }
                 }
                 else
